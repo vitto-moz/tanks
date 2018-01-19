@@ -1,0 +1,41 @@
+{
+  "name": "typescript-chat-client-react",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": {
+    "email": "nils@nilshartmann.net",
+    "name": "Nils Hartmann",
+    "url": "https://nilshartmann.net"
+  },
+  "scripts": {
+    "start": "yarn devserver",
+    "clean": "rimraf -rf public/dist/",
+    "dist": "webpack",
+    "webpack": "webpack --watch",
+    "devserver": "webpack-dev-server --content-base public/",
+    "prettier": "prettier --write \"{src}/**/*.{js,jsx,ts,tsx}\""
+  },
+  "devDependencies": {
+    "@types/webpack-env": "1.13.2",
+    "awesome-typescript-loader": "3.2.3",
+    "prettier": "^1.10.2",
+    "react-hot-loader": "3.0.0-beta.7",
+    "rimraf": "2.6.2",
+    "source-map-loader": "0.2.3",
+    "tslint": "5.8.0",
+    "typescript": "^2.7.0-rc",
+    "webpack": "3.8.1",
+    "webpack-dev-server": "2.9.3"
+  },
+  "dependencies": {
+    "@types/react": "^16.0.34",
+    "@types/react-dom": "^16.0.3",
+    "@types/socket.io-client": "^1.4.32",
+    "material-ui": "^1.0.0-beta.29",
+    "material-ui-icons": "^1.0.0-beta.17",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "socket.io": "^2.0.4",
+    "typeface-roboto": "^0.0.50"
+  }
+}
