@@ -11,7 +11,7 @@ import Person from "material-ui-icons/Person";
 
 import { User, Message } from "../model";
 
-import LoginDialog from "./Login";
+import UserDialog from "./UserDialog";
 import Chat from "./Chat";
 
 const AVATAR_URL = "https://api.adorable.io/avatars/285";
@@ -34,15 +34,39 @@ const styles: StyleRules = {
 
 interface AppState {
   user: User | null;
+  usernameChangeDialogOpen: boolean;
 }
 const getRandomId = (): number => Math.floor(Math.random() * 1000000) + 1;
 
 class App extends React.Component<any, AppState> {
   state: AppState = {
-    user: null
+    user: null,
+    usernameChangeDialogOpen: false
   };
 
-  private onLogin = (username: string) => {
+  private openUsernameChangeDialog = () => {
+    this.setState({
+      usernameChangeDialogOpen: true
+    });
+  };
+
+  private onUsernameChange = (username: string) => {
+    const { user: currentUser } = this.state;
+
+    if (currentUser) {
+      const newUser: User = {
+        ...currentUser,
+        name: username
+      };
+
+      this.setState({
+        user: newUser,
+        usernameChangeDialogOpen: false
+      });
+    }
+  };
+
+  private onUsernameSet = (username: string) => {
     const randomId = getRandomId();
 
     const user: User = {
@@ -56,7 +80,7 @@ class App extends React.Component<any, AppState> {
 
   render() {
     const { classes } = this.props;
-    const { user } = this.state;
+    const { user, usernameChangeDialogOpen } = this.state;
 
     return (
       <div className={classes.root}>
@@ -68,14 +92,17 @@ class App extends React.Component<any, AppState> {
             <Typography type="title" color="inherit">
               TypeScript React Chat
             </Typography>
-            <Button fab color="accent" className={classes.personButton}>
+            <Button fab color="accent" className={classes.personButton} onClick={this.openUsernameChangeDialog}>
               <Person />
             </Button>
           </Toolbar>
         </AppBar>
 
-        {!user && <LoginDialog onLogin={this.onLogin} />}
+        {!user && <UserDialog onUsernameSet={this.onUsernameSet} />}
         {user && <Chat user={user} />}
+        {usernameChangeDialogOpen && (
+          <UserDialog onUsernameSet={this.onUsernameChange} title="Edit details" initialUsername={user && user.name} />
+        )}
       </div>
     );
   }

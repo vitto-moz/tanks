@@ -2,8 +2,6 @@ import * as React from "react";
 import { withStyles, WithStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
 import Modal from "material-ui/Modal";
-import Button from "material-ui/Button";
-import Input, { InputLabel, InputAdornment } from "material-ui/Input";
 import TextField from "material-ui/TextField";
 
 function getModalStyle(): React.CSSProperties {
@@ -23,39 +21,37 @@ function getModalStyle(): React.CSSProperties {
   };
 }
 
-const styles = {
-  usernameInput: {
-    width: "100%"
-  }
-};
-
-interface LoginState {
+interface UserDialogState {
   username: string | null;
 }
 
-interface LoginProps {
-  onLogin: (username: string) => void;
+interface UserDialogProps {
+  title?: string;
+  initialUsername?: string | null;
+  onUsernameSet: (username: string) => void;
 }
 
-class Login extends React.Component<LoginProps & WithStyles<"usernameInput">, LoginState> {
-  state: LoginState = {
-    username: null
-  };
+class UserDialog extends React.Component<UserDialogProps, UserDialogState> {
+  private usernameInput: HTMLInputElement | null = null;
+
+  constructor(props: UserDialogProps) {
+    super(props);
+
+    this.state = {
+      username: props.initialUsername || null
+    };
+  }
 
   onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ username: e.currentTarget.value });
 
-  onLoginClick = () => {
+  onEnter = () => {
     if (this.state.username) {
-      this.props.onLogin(this.state.username);
+      this.props.onUsernameSet(this.state.username);
     }
   };
 
-  onEnter = () => {
-    this.onLoginClick();
-  };
-
   render() {
-    const { onLogin } = this.props;
+    const { onUsernameSet, title = "Welcome" } = this.props;
     const { username } = this.state;
 
     const errorMessage = username || username === null ? null : "Please enter a username";
@@ -65,11 +61,10 @@ class Login extends React.Component<LoginProps & WithStyles<"usernameInput">, Lo
       <div>
         <Modal open={true}>
           <div style={getModalStyle()}>
-            <Typography type="title" id="modal-title">
-              Welcome
-            </Typography>
+            <Typography type="title">{title}</Typography>
             <TextField
               fullWidth
+              autoFocus
               label={errorMessage || "Username"}
               id="username"
               error={!!errorMessage}
@@ -83,15 +78,10 @@ class Login extends React.Component<LoginProps & WithStyles<"usernameInput">, Lo
               }}
               helperText="Please type your username"
             />
-            <div style={{ width: "100%", marginTop: "10px", display: "flex" }}>
-              <Button raised color="accent" style={{ marginLeft: "auto" }} disabled={!inputValue} onClick={this.onLoginClick}>
-                Login
-              </Button>
-            </div>
           </div>
         </Modal>
       </div>
     );
   }
 }
-export default withStyles(styles)<LoginProps>(Login);
+export default UserDialog;

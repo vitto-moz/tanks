@@ -38,11 +38,19 @@ const ChatMessage = withStyles(checkMessageStyles)<ChatMessageProps>((props: Cha
     return null;
   }
 
-  if (action === Action.JOINED) {
+  if (action === Action.JOINED || action === Action.RENAME) {
     return (
       <ListItem style={{ display: "inline" }}>
         <Typography type="body2" gutterBottom align="center">
-          <b>{from.name}</b> joined to the conversation.
+          {action === Action.JOINED ? (
+            <React.Fragment>
+              <b>{from.name}</b> joined to the conversation.
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <b>{content.previousUsername}</b> is now <b>{content.username}</b>
+            </React.Fragment>
+          )}
         </Typography>
       </ListItem>
     );

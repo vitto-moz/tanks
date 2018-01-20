@@ -48,19 +48,40 @@ class Chat extends React.Component<ChatPropsWithStyles, any> {
     this.sendNotification(null, Action.JOINED);
   }
 
+  componentWillReceiveProps(nextProps: ChatPropsWithStyles) {
+    if (nextProps.user !== this.props.user) {
+      this.sendNotification(
+        {
+          username: nextProps.user.name,
+          previousUsername: this.props.user.name
+        },
+        Action.RENAME
+      );
+    }
+  }
+
   private sendNotification(params: any, action: Action): void {
     if (!this.socketService) {
       return;
     }
     const { user } = this.props;
 
-    let message: NewMessage;
+    let message: NewMessage | null = null;
 
     if (action === Action.JOINED) {
       message = {
         from: user,
-        action: action
+        action
       };
+    } else if (action === Action.RENAME) {
+      message = {
+        from: user,
+        action,
+        content: params
+      };
+    }
+
+    if (message) {
       this.socketService.send(message);
     }
   }
