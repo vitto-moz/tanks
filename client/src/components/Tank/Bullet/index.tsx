@@ -74,7 +74,6 @@ class Bullet extends React.PureComponent<Props, State> {
   }
 
   render() {
-    // console.log('this.state.fire ===> render', this.state.fire)
     return (
       <div style={{
         ...styles.bullet,
