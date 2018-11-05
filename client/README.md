@@ -1,28 +1,28 @@
-# TypescriptChatClient
+# TypeScript Chat Client React
 
-This project uses Angular 5.
+* **This is a fork of [Luis Aviles'](https://luixaviles.com/) Socket.IO/TypeScript/Angular example, that you can find [on Github](https://github.com/luixaviles/socket-io-typescript-chat).**
 
-## Development server
+* **Work in progress!**
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Run the React frontend
 
-## Code scaffolding
+First, please make sure, that the **backend is running** (see README.md in top-level folder).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|module`.
+Then run the following commands in this `client-react` folder from the terminal:
 
-## Build
+```bash
+yarn install
+yarn start
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+The React-based frontend then runs on http://localhost:4300
 
-## Running unit tests
+Note: of course you can run the original Angular frontend as well. Then you can happily chat between React and Angular 😊
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Tech Stack
 
-## Running end-to-end tests
+This frontend uses:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+* [React 16.2](https://reactjs.org/)
+* [TypeScript 2.7-rc](https://blogs.msdn.microsoft.com/typescript/2018/01/17/announcing-typescript-2-7-rc/)
+* [material-ui](https://material-ui-next.com/)
