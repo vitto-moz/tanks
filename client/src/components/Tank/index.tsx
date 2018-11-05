@@ -1,5 +1,7 @@
 import * as React from "react";
 import styles from './tankStyles'
+import {Subject, interval} from 'rxjs'
+import {throttle} from 'rxjs/operators'
 
 interface State {
   top: number
@@ -26,6 +28,7 @@ const KEYS_CODES: IKeysCodes = {
 }
 
 const QUANTUM = 100
+const UPDATE_TIME = 1000
 
 const keysActions: IKeyActions = {
   LEFT_ARROW: {left: -QUANTUM},
@@ -35,24 +38,34 @@ const keysActions: IKeyActions = {
 }
 
 class Tank extends React.PureComponent<{}, State> {
+  private onPress$: Subject<number> = new Subject()
+
 
   state: State = {
     top: 0,
     left: 0
   };
 
+  constructor(props: {}){
+    super(props)
+    this.onPress$.pipe(
+      throttle(() => interval(UPDATE_TIME)),
+    ).subscribe((keyCode) => this.move(keyCode))
+  }
+
+  private move(keyCode: number){
+    const action = keysActions[KEYS_CODES[keyCode]]
+    this.setState(prevState => {
+      return {
+        top: action.top ? prevState.top + action.top : prevState.top,
+        left: action.left ? prevState.left + action.left : prevState.left
+      }
+    })
+  }
 
   public componentDidMount() {
     document.addEventListener('keydown', (event) => {
-
-      const action = keysActions[KEYS_CODES[event.which]]
-      console.log('KEYS_CODES[event.which] ', KEYS_CODES[event.which])
-      this.setState(prevState => {
-        return {
-          top: action.top ? prevState.top + action.top : prevState.top,
-          left: action.left ? prevState.left + action.left : prevState.left
-        }
-      })
+      this.onPress$.next(event.which)
     });
   }
 
@@ -61,7 +74,7 @@ class Tank extends React.PureComponent<{}, State> {
       <div style={{
         ...styles.tank,
         transform: `translateX(${this.state.left}px) translateY(${this.state.top}px)`,
-        transition: '2s'
+        transition: '1s linear'
         // transform: `translateY(${this.state.top}px)`
       }} />
     );
