@@ -31,7 +31,7 @@ $ npm start
 
 ## Run Server For Develpment
 
-To run server locally, just install dependencies and run `gulp` task to create a build:
+To build and restart server file on every changes of ts files - run:
 
 ```bash
 $ npm run dev
