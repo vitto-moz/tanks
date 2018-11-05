@@ -29,6 +29,14 @@ $ gulp build
 $ npm start
 ```
 
+## Run Server For Develpment
+
+To run server locally, just install dependencies and run `gulp` task to create a build:
+
+```bash
+$ npm run dev
+```
+
 The `socket.io` server will be running on port `8080`
 
 ## Run React Client

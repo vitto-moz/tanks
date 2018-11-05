@@ -6,16 +6,19 @@
   "author": "Luis Aviles",
   "license": "MIT",
   "scripts": {
+    "dev": "gulp watch",
     "start": "node dist/index.js"
   },
   "dependencies": {
     "@types/express": "~4.0.36",
     "@types/socket.io": "~1.4.29",
     "express": "~4.10.0",
+    "gulp-restart": "^0.1.1",
     "socket.io": "~2.0.3"
   },
   "devDependencies": {
     "gulp": "~3.9.1",
+    "gulp-nodemon": "^2.4.1",
     "gulp-typescript": "~3.2.1",
     "typescript": "~2.5.0"
   }
