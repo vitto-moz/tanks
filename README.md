@@ -5,7 +5,6 @@ First, ensure you have the following installed:
 
 1. NodeJS - Download and Install latest version of Node: [NodeJS](http://http://nodejs.org)
 2. Git - Download and Install [Git](http://git-scm.com)
-3. Angular CLI - Install Command Line Interface for Angular [https://cli.angular.io/](https://cli.angular.io/)
 
 After that, use `Git bash` to run all commands if you are on Windows platform.
 
@@ -14,8 +13,8 @@ After that, use `Git bash` to run all commands if you are on Windows platform.
 In order to start the project use:
 
 ```bash
-$ git clone https://github.com/luixaviles/socket-io-typescript-chat.git
-$ cd socket-io-typescript-chat
+$ git clone https://github.com/vitto-moz/tanks.git
+$ cd tanks
 ```
 
 ## Run Server
