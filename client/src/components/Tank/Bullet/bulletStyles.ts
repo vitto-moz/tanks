@@ -1,10 +1,12 @@
 const styles = {
-  trunk: {
+  bullet: {
     position: 'absolute',
-    backgroundColor: 'white',
-    width: '50px',
+    backgroundColor: 'red',
+    width: '10px',
     height: '10px',
-    zIndex: 1
+    left: '45px',
+    top: '45px',
+    zIndex: 0
   }
 } as React.CSSProperties 
 

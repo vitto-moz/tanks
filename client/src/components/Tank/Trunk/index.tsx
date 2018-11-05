@@ -49,7 +49,7 @@ class Trunk extends React.PureComponent<Props, {}> {
     return (
       <div style={{
         ...styles.trunk,
-        ...this.getTrunkStyles()
+        ...this.getTrunkStyles(),
       }} />
     );
   }
