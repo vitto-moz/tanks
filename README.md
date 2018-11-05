@@ -59,17 +59,17 @@ $ npm start
 
 The `socket.io` server will be running on port `8080`
 
-## Run Angular Client
+## Run React Client
 
 Open other command line window and run following commands:
 
 ```bash
 $ cd client
-$ npm install
-$ ng serve
+$ yarn install
+$ yarn start
 ```
 
-Now open your browser in following URL: [http://localhost:4200](http://localhost:4200/)
+Now open your browser in following URL: [http://localhost:4300/](http://localhost:4300/)
 
 ## License
 
