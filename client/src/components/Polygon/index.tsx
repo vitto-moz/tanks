@@ -2,6 +2,7 @@ import * as React from "react";
 import {User, Message, Action, NewMessage} from "../../model";
 import SocketService from "../../services/SocketService";
 import styles from './polygonStyles'
+import Tank from '../Tank';
 
 interface Props {
   user: User | null;
@@ -107,6 +108,7 @@ class Polygon extends React.Component<Props, any> {
   render() {
     return (
       <div style={styles.polygon}>
+        <Tank />
       </div>
     );
   }
