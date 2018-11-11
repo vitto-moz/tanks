@@ -41,7 +41,7 @@ export class TanksServer {
         });
 
         this.io.on('connect', (socket: Socket) => {
-            socketService.listen(socket)
+            socketService.listen(socket, this.io)
             console.log('Connected client on port %s.', this.port);
         });
     }

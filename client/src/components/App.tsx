@@ -1,7 +1,8 @@
 import * as React from "react";
-import {User, Message} from "../model";
+import {User} from "../model";
 
 import Polygon from './Polygon';
+import socketService from '../services/SocketService';
 
 const AVATAR_URL = "https://api.adorable.io/avatars/285";
 
@@ -11,11 +12,16 @@ interface AppState {
 }
 const getRandomId = (): number => Math.floor(Math.random() * 1000000) + 1;
 
-class App extends React.Component<any, AppState> {
+class App extends React.Component<{}, AppState> {
   state: AppState = {
     user: null,
     usernameChangeDialogOpen: false
   };
+
+  constructor(props: {}) {
+    super(props)
+    this.registerUser = this.registerUser.bind(this)
+  }
 
   private openUsernameChangeDialog = () => {
     this.setState({
@@ -51,12 +57,26 @@ class App extends React.Component<any, AppState> {
     this.setState({user});
   };
 
+  private registerUser() {
+    console.log('registerUser ')
+    socketService.registerUser('tankist')
+  }
+
   render() {
-    const {classes} = this.props;
     const {user, usernameChangeDialogOpen} = this.state;
 
     return (
-      <Polygon user={user} />
+      [
+        <Polygon user={user} key="Polygon" />,
+        <button
+          key="registerUserButton"
+          onClick={this.registerUser}
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+          }} > start </button>
+      ]
     )
   }
 }

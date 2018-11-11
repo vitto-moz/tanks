@@ -29,23 +29,23 @@ type ChatPropsWithStyles = ChatProps & WithStyles<"chatContainer">;
 
 class Chat extends React.Component<ChatPropsWithStyles, any> {
   private listElement: HTMLDivElement | null = null;
-  private socketService: SocketService | null = null;
+  // private socketService: SocketService | null = null;
 
   state: ChatState = {
     messages: []
   };
 
   componentDidMount() {
-    this.socketService = new SocketService();
-    this.socketService.onMessage((receivedMessage: Message) => {
-      const { messages: oldMessages } = this.state;
+    // this.socketService = new SocketService();
+    // this.socketService.onMessage((receivedMessage: Message) => {
+    //   const { messages: oldMessages } = this.state;
 
-      const messages = [...oldMessages, receivedMessage];
+    //   const messages = [...oldMessages, receivedMessage];
 
-      this.setState({ messages }, this.scrollToBottom);
-    });
+    //   this.setState({ messages }, this.scrollToBottom);
+    // });
 
-    this.sendNotification(null, Action.JOINED);
+    // this.sendNotification(null, Action.JOINED);
   }
 
   componentWillReceiveProps(nextProps: ChatPropsWithStyles) {
@@ -61,9 +61,9 @@ class Chat extends React.Component<ChatPropsWithStyles, any> {
   }
 
   private sendNotification(params: any, action: Action): void {
-    if (!this.socketService) {
-      return;
-    }
+    // if (!this.socketService) {
+    //   return;
+    // }
     const { user } = this.props;
 
     let message: NewMessage | null = null;
@@ -82,7 +82,7 @@ class Chat extends React.Component<ChatPropsWithStyles, any> {
     }
 
     if (message) {
-      this.socketService.send(message);
+      // this.socketService.send(message);
     }
   }
 
@@ -107,16 +107,16 @@ class Chat extends React.Component<ChatPropsWithStyles, any> {
   }
 
   onChatMessageEnter = (message: string) => {
-    if (!this.socketService) {
-      return;
-    }
+    // if (!this.socketService) {
+    //   return;
+    // }
 
     const { user } = this.props;
 
-    this.socketService.send({
-      from: user,
-      content: message
-    });
+    // this.socketService.send({
+    //   from: user,
+    //   content: message
+    // });
   };
 
   render() {

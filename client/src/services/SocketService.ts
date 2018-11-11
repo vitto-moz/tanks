@@ -6,7 +6,7 @@ let idCounter = 0;
 
 type OnMessageCallback = (message: Message) => void;
 
-export default class SocketService {
+export class SocketService {
   private socket: SocketIOClient.Socket;
 
   constructor() {
@@ -26,4 +26,12 @@ export default class SocketService {
       onMessageCallback(message);
     });
   }
+
+  public registerUser(name: string){
+    console.log('register_user ')
+    this.socket.emit("register_user", name);
+  }
 }
+
+const socketService = new SocketService()
+export default socketService

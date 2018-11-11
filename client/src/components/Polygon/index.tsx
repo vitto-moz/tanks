@@ -1,6 +1,5 @@
 import * as React from "react";
-import {User, Message, Action, NewMessage} from "../../model";
-import SocketService from "../../services/SocketService";
+import {User, Message, Action} from "../../model";
 import styles from './polygonStyles'
 import Tank from '../Tank';
 
@@ -14,23 +13,13 @@ interface State {
 
 class Polygon extends React.Component<Props, any> {
   private listElement: HTMLDivElement | null = null;
-  private socketService: SocketService | null = null;
 
   state: State = {
     messages: []
   };
 
   componentDidMount() {
-    this.socketService = new SocketService();
-    this.socketService.onMessage((receivedMessage: Message) => {
-      const {messages: oldMessages} = this.state;
-
-      const messages = [...oldMessages, receivedMessage];
-
-      this.setState({messages}, this.scrollToBottom);
-    });
-
-    this.sendNotification(null, Action.JOINED);
+    // this.sendNotification(null, Action.JOINED);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -46,10 +35,10 @@ class Polygon extends React.Component<Props, any> {
   }
 
   private sendNotification(params: any, action: Action): void {
-    if (!this.socketService) {
-      return;
-    }
-    const {user} = this.props;
+    // if (!this.socketService) {
+    //   return;
+    // }
+    // const {user} = this.props;
 
     // let message: NewMessage | null = null;
 
@@ -91,19 +80,19 @@ class Polygon extends React.Component<Props, any> {
     // todo: disconnect
   }
 
-  onChatMessageEnter = (message: string) => {
-    if (!this.socketService) {
-      return;
-    }
+  // onChatMessageEnter = (message: string) => {
+  //   if (!this.socketService) {
+  //     return;
+  //   }
 
-    const {user} = this.props;
-    if (user) {
-      this.socketService.send({
-        from: user,
-        content: message
-      });
-    }
-  };
+  //   const {user} = this.props;
+  //   if (user) {
+  //     this.socketService.send({
+  //       from: user,
+  //       content: message
+  //     });
+  //   }
+  // };
 
   render() {
     return (
