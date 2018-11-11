@@ -2,7 +2,7 @@ import * as React from "react";
 import {User} from "../model";
 
 import Polygon from './Polygon';
-import socketService from '../services/SocketService';
+import socketService from '../services/socketService';
 
 const AVATAR_URL = "https://api.adorable.io/avatars/285";
 
@@ -20,6 +20,9 @@ class App extends React.Component<{}, AppState> {
 
   constructor(props: {}) {
     super(props)
+    socketService.onUpdate(() => {
+      console.log('socketService.onUpdate ')
+    })
     this.registerUser = this.registerUser.bind(this)
   }
 

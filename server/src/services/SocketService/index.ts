@@ -2,12 +2,13 @@ import {Socket} from 'socket.io';
 import gameService from '../GameService';
 import {direction, ITanks} from '../GameService/interfaces';
 import SOCKET_EVENTS from './socketEvents';
+
 class SocketService {
     private socket: Socket | null = null
 
     public listen(socket: Socket, io) {
         this.registerSocket(socket, io)
-        gameService.startUpdatingSycle(this.emitUpdate)
+        gameService.startUpdatingSycle(this.emitUpdate.bind(this))
 
         socket.on('register_user', (name: string) => {
             gameService.addTank(name)
@@ -24,6 +25,7 @@ class SocketService {
     }
 
     private emitUpdate(tanks: ITanks) {
+        console.log('emitUpdate ')
         this.io.emit(SOCKET_EVENTS.UPDATE, tanks);
     }
 

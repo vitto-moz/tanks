@@ -4,7 +4,7 @@ import { withStyles, Theme, WithStyles } from "material-ui/styles";
 import List from "material-ui/List";
 
 import { User, Message, Action, NewMessage } from "../../model";
-import SocketService from "../../services/SocketService";
+import SocketService from "../../services/socketService";
 
 import ChatList from "./ChatList";
 import ChatInput from "./ChatInput";
