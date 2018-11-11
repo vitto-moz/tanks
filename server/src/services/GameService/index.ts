@@ -16,7 +16,7 @@ class GameService {
         const id = randomId().toString()
         this.tanks[id] = new Tank(name, id)
     }
-
+    
     public moveTank(id: string, direction: direction) {
         switch (direction) {
             case DIRECTIONS.UP:
