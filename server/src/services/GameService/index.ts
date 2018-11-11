@@ -12,11 +12,18 @@ export const DIRECTIONS: directions = {
 class GameService {
     public tanks: ITanks = {}
 
+    public startUpdatingSycle(emitUpdate: (tanks: ITanks) => void) {
+        // emitUpdate - is a socket io event to update polygon 
+        setInterval(() => {
+            emitUpdate(this.tanks)
+        }, 1000)
+    }
+
     public addTank(name: string) {
         const id = randomId().toString()
         this.tanks[id] = new Tank(name, id)
     }
-    
+
     public moveTank(id: string, direction: direction) {
         switch (direction) {
             case DIRECTIONS.UP:
