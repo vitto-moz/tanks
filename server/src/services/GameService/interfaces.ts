@@ -12,3 +12,5 @@ export interface ITank {
 export interface ITanks {
     [index: string]: ITank
 }
+
+export type directions =  {[k in direction]: direction}
