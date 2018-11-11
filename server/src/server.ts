@@ -1,15 +1,15 @@
-import { createServer, Server } from 'http';
+import {createServer, Server} from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
-
-import { Message } from './model';
+import socketService from './services/SocketService';
+import {Socket} from 'socket.io';
 
 export class TanksServer {
-    public static readonly PORT:number = 8080;
-    private app: express.Application;
-    private server: Server;
-    private io: SocketIO.Server;
-    private port: string | number;
+    public static readonly PORT: number = 8080;
+    private app: express.Application | null = null
+    private server: Server | null = null
+    private io: SocketIO.Server | null = null
+    private port: string | number | null = null
 
     constructor() {
         this.createApp();
@@ -40,16 +40,9 @@ export class TanksServer {
             console.log('Running server on port %s', this.port);
         });
 
-        this.io.on('connect', (socket: any) => {
+        this.io.on('connect', (socket: Socket) => {
+            socketService.listen(socket)
             console.log('Connected client on port %s.', this.port);
-            socket.on('message', (m: Message) => {
-                console.log('[server](message): %s', JSON.stringify(m));
-                this.io.emit('message', m);
-            });
-
-            socket.on('disconnect', () => {
-                console.log('Client disconnected');
-            });
         });
     }
 
