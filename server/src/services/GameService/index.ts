@@ -2,7 +2,7 @@ import {Tank} from './tank.model';
 import randomId from '../../utils/randomId';
 import {ITanks, direction, directions} from './interfaces';
 
-const DIRECTIONS: directions = {
+export const DIRECTIONS: directions = {
     UP: 'UP',
     DOWN: 'DOWN',
     LEFT: 'LEFT',
