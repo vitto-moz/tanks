@@ -1,4 +1,4 @@
-import { ChatServer } from './chat-server';
+import {TanksServer} from './chat-server';
 
-let app = new ChatServer().getApp();
-export { app };
+const app = new TanksServer().getApp();
+export {app};
