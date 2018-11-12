@@ -1,5 +1,8 @@
 const SOCKET_EVENTS = {
-    UPDATE: 'UPDATE' 
+    UPDATE: 'UPDATE' ,
+    REGISTER_USER: 'REGISTER_USER', 
+    MOVE: 'MOVE', 
+    DISCONNECT: 'DISCONNECT', 
 }
 
 export default SOCKET_EVENTS

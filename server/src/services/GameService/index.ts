@@ -9,14 +9,14 @@ export const DIRECTIONS: directions = {
     RIGHT: 'RIGHT',
 }
 
+const UPDATING_INTERVAL = 1000
+
 class GameService {
     public tanks: ITanks = {}
 
     public startUpdatingSycle(emitUpdate: (tanks: ITanks) => void) {
         // emitUpdate - is a socket io event to update polygon 
-        setInterval(() => {
-            emitUpdate(this.tanks)
-        }, 1000)
+        setInterval(() => {emitUpdate(this.tanks)}, UPDATING_INTERVAL)
     }
 
     public addTank(name: string) {

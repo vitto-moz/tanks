@@ -5,31 +5,38 @@ import SOCKET_EVENTS from './socketEvents';
 
 class SocketService {
     private socket: Socket | null = null
+    private io: Socket | null = null
 
-    public listen(socket: Socket, io) {
+    public listen(socket: Socket, io: Socket) {
         this.registerSocket(socket, io)
         gameService.startUpdatingSycle(this.emitUpdate.bind(this))
-
-        socket.on('register_user', (name: string) => {
-            gameService.addTank(name)
-            console.log('gameService.tanks ', gameService.tanks)
-        });
-
-        socket.on('move', (id: string, direction: direction) => {
-            gameService.moveTank(id, direction)
-        });
-
-        socket.on('disconnect', () => {
-            console.log('Client disconnected');
-        });
+        if (this.socket) this.bindSocketEvents()
     }
 
     private emitUpdate(tanks: ITanks) {
-        console.log('emitUpdate ')
-        this.io.emit(SOCKET_EVENTS.UPDATE, tanks);
+        if (this.io) {
+            this.io.emit(SOCKET_EVENTS.UPDATE, tanks);
+        }
     }
 
-    private registerSocket(socket: Socket, io) {
+    private bindSocketEvents() {
+        if (this.socket) {
+            this.socket.on(SOCKET_EVENTS.REGISTER_USER, (name: string) => {
+                gameService.addTank(name)
+            });
+
+            this.socket.on(SOCKET_EVENTS.MOVE, (id: string, direction: direction) => {
+                gameService.moveTank(id, direction)
+            });
+
+            this.socket.on(SOCKET_EVENTS.DISCONNECT, () => {
+                console.log('Client disconnected');
+            });
+        }
+
+    }
+
+    private registerSocket(socket: Socket, io: Socket) {
         this.socket = socket
         this.io = io
     }
