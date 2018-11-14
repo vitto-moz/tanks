@@ -1,6 +1,6 @@
 import {Tank} from './tank.model';
 import randomId from '../../utils/randomId';
-import {ITanks, direction, directions} from './interfaces';
+import {ITanks, direction, directions, ITank} from './interfaces';
 
 export const DIRECTIONS: directions = {
     UP: 'UP',
@@ -22,6 +22,10 @@ class GameService {
     public addTank(name: string) {
         const id = randomId().toString()
         this.tanks[id] = new Tank(name, id)
+    }
+
+    public updateTank(tank: ITank) {
+        this.tanks[tank.id] = tank
     }
 
     public moveTank(id: string, direction: direction) {
