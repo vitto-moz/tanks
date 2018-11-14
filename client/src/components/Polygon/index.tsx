@@ -1,10 +1,11 @@
 import * as React from "react";
-import {User, Message, Action} from "../../model";
+import {Message, Action} from "../../model";
 import styles from './polygonStyles'
 import Tank from '../Tank';
+import {ITanks, ITank} from '../../services/socketService/interfaces';
 
 interface Props {
-  user: User | null;
+  gameState: ITanks
 }
 
 interface State {
@@ -97,7 +98,11 @@ class Polygon extends React.Component<Props, any> {
   render() {
     return (
       <div style={styles.polygon}>
-        <Tank />
+        {
+          Object.values(this.props.gameState).map((tank: ITank) => {
+            return <Tank tank={tank} />
+          })
+        }
       </div>
     );
   }

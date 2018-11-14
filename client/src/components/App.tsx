@@ -1,73 +1,42 @@
 import * as React from "react";
-import {User} from "../model";
-
-import Polygon from './Polygon';
 import socketService from '../services/socketService';
+import Polygon from './Polygon';
 
-const AVATAR_URL = "https://api.adorable.io/avatars/285";
+export type direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
 
-interface AppState {
-  user: User | null;
-  usernameChangeDialogOpen: boolean;
+export interface ITank {
+  id: string
+  name: string
+  hp: number
+  x: number
+  y: number
+  direction: direction
 }
-const getRandomId = (): number => Math.floor(Math.random() * 1000000) + 1;
 
-class App extends React.Component<{}, AppState> {
-  state: AppState = {
-    user: null,
-    usernameChangeDialogOpen: false
-  };
+export interface ITanks {
+  [index: string]: ITank
+}
 
-  constructor(props: {}) {
-    super(props)
-    socketService.onUpdate(() => {
-      console.log('socketService.onUpdate ')
-    })
-  }
+interface GameState extends ITanks {}
 
-  private openUsernameChangeDialog = () => {
-    this.setState({
-      usernameChangeDialogOpen: true
-    });
-  };
+class App extends React.Component<{}, GameState> {
+    state: GameState = {};
 
-  private onUsernameChange = (username: string) => {
-    const {user: currentUser} = this.state;
-
-    if (currentUser) {
-      const newUser: User = {
-        ...currentUser,
-        name: username
-      };
-
-      this.setState({
-        user: newUser,
-        usernameChangeDialogOpen: false
-      });
+    constructor(props: {}) {
+      super(props)
+      socketService.onUpdate((gameState: ITanks) => {
+        this.setState(gameState)
+      })
     }
-  };
 
-  private onUsernameSet = (username: string) => {
-    const randomId = getRandomId();
+    render() {
+      return (
+        [
+          <Polygon gameState={this.state} key="Polygon" />,
+        ]
+      )
+    }
 
-    const user: User = {
-      name: username,
-      id: randomId,
-      avatar: `${AVATAR_URL}/${randomId}.png`
-    };
-
-    this.setState({user});
-  };
-
-  render() {
-    const {user, usernameChangeDialogOpen} = this.state;
-
-    return (
-      [
-        <Polygon user={user} key="Polygon" />,
-      ]
-    )
   }
-}
 
 export default App

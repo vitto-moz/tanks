@@ -4,16 +4,9 @@ import {Subject, interval} from 'rxjs'
 import {throttle} from 'rxjs/operators'
 import Trunk from './Trunk';
 import Bullet from './Bullet';
+import {ITank} from '../../services/socketService/interfaces';
 
 export type direction = 'LEFT' | 'RIGHT' | 'UP' | 'DOWN' | 'SPACE'
-
-interface State {
-  top: number
-  left: number
-  direction: direction
-  fire: boolean
-  bullets: IBullet[]
-}
 
 export interface IKeysCodes {
   [index: string]: direction;
@@ -50,7 +43,21 @@ const keysActions: IKeyActions = {
   DOWN: {top: +QUANTUM},
 }
 
-class Tank extends React.PureComponent<{}, State> {
+
+interface Props {
+  tank: ITank
+}
+
+interface State {
+  top: number
+  left: number
+  direction: direction
+  fire: boolean
+  bullets: IBullet[]
+}
+
+
+class Tank extends React.PureComponent<Props, State> {
   private onKeyPress$: Subject<number> = new Subject()
 
   state: State = {
@@ -61,82 +68,83 @@ class Tank extends React.PureComponent<{}, State> {
     bullets: []
   }
 
-  constructor(props: {}) {
+  constructor(props: Props) {
     super(props)
-    this.onKeyPress$.pipe(
-      throttle(() => interval(UPDATE_TIME)),
-    ).subscribe((keyCode) => this.move(keyCode))
-    this.onFireFinish = this.onFireFinish.bind(this)
+    // this.onKeyPress$.pipe(
+    //   throttle(() => interval(UPDATE_TIME)),
+    // ).subscribe((keyCode) => this.move(keyCode))
+    // this.onFireFinish = this.onFireFinish.bind(this)
   }
 
-  private move(keyCode: number) {
-    const action = keysActions[KEYS_CODES[keyCode]]
-    const direction = KEYS_CODES[keyCode]
-    this.setState(prevState => {
-      return {
-        top: action.top ? prevState.top + action.top : prevState.top,
-        left: action.left ? prevState.left + action.left : prevState.left,
-        direction
-      }
-    })
-  }
+  // private move(keyCode: number) {
+  //   const action = keysActions[KEYS_CODES[keyCode]]
+  //   const direction = KEYS_CODES[keyCode]
+  //   this.setState(prevState => {
+  //     return {
+  //       top: action.top ? prevState.top + action.top : prevState.top,
+  //       left: action.left ? prevState.left + action.left : prevState.left,
+  //       direction
+  //     }
+  //   })
+  // }
 
-  private onFire() {
-    this.setState(prevState => {
-      const bullets = [...prevState.bullets]
-      bullets.push({onFly: true, direction: prevState.direction})
-      return {fire: true, bullets}
-    }, () => {
-      setTimeout(() => {
-        this.setState(prevState => {
-          const bullets = prevState.bullets
-          bullets[bullets.length - 1] = {onFly: false, direction: prevState.direction}
-          return {bullets}
-        })
-      }, 3000)
-    })
-  }
+  // private onFire() {
+  //   this.setState(prevState => {
+  //     const bullets = [...prevState.bullets]
+  //     bullets.push({onFly: true, direction: prevState.direction})
+  //     return {fire: true, bullets}
+  //   }, () => {
+  //     setTimeout(() => {
+  //       this.setState(prevState => {
+  //         const bullets = prevState.bullets
+  //         bullets[bullets.length - 1] = {onFly: false, direction: prevState.direction}
+  //         return {bullets}
+  //       })
+  //     }, 3000)
+  //   })
+  // }
 
-  private onFireFinish(index: number) {
-    this.setState(prevState => {
-      const bullets = [...prevState.bullets]
-      const bulletOnFinish = {...bullets[index]}
-      bulletOnFinish.onFly = false
-      bullets[index] = bulletOnFinish
-      return {bullets}
+  // private onFireFinish(index: number) {
+  //   this.setState(prevState => {
+  //     const bullets = [...prevState.bullets]
+  //     const bulletOnFinish = {...bullets[index]}
+  //     bulletOnFinish.onFly = false
+  //     bullets[index] = bulletOnFinish
+  //     return {bullets}
 
-    })
-  }
+  //   })
+  // }
 
-  public componentDidMount() {
-    document.addEventListener('keydown', (event) => {
-      if (KEYS_CODES[event.which] === 'SPACE') {
-        this.onFire()
-      } else {
-        this.onKeyPress$.next(event.which)
-      }
-    });
-  }
+  // public componentDidMount() {
+  //   document.addEventListener('keydown', (event) => {
+  //     if (KEYS_CODES[event.which] === 'SPACE') {
+  //       this.onFire()
+  //     } else {
+  //       this.onKeyPress$.next(event.which)
+  //     }
+  //   });
+  // }
 
   render() {
     return (
       <div style={{
         ...styles.tank,
-        transform: `translateX(${this.state.left}px) translateY(${this.state.top}px)`,
+        transform: `translateX(${this.props.tank.x}px) translateY(${this.props.tank.y}px)`,
         transition: '1s linear',
         // transform: `translateY(${this.state.top}px)`
       }} >
-        <Trunk direction={this.state.direction} />
-        {this.state.bullets.map((bullet, index) => {
+        <Trunk direction={this.props.tank.direction} />
+        {/* {this.state.bullets.map((bullet, index) => {
           return bullet.onFly
             ? <Bullet
               key={index}
               index={index}
               direction={bullet.direction}
               onFly={bullet.onFly}
-              onFinish={this.onFireFinish} />
+              onFinish={this.onFireFinish} 
+              />
             : null
-        })}
+        })} */}
 
       </div>
     )
