@@ -22,6 +22,7 @@ class SocketService {
     private bindSocketEvents() {
         if (this.socket) {
             this.socket.on(SOCKET_EVENTS.REGISTER_USER, (name: string) => {
+                console.log('name', name)
                 gameService.addTank(name)
             });
 

@@ -23,7 +23,6 @@ class App extends React.Component<{}, AppState> {
     socketService.onUpdate(() => {
       console.log('socketService.onUpdate ')
     })
-    this.registerUser = this.registerUser.bind(this)
   }
 
   private openUsernameChangeDialog = () => {
@@ -60,25 +59,12 @@ class App extends React.Component<{}, AppState> {
     this.setState({user});
   };
 
-  private registerUser() {
-    console.log('registerUser ')
-    socketService.registerUser('tankist')
-  }
-
   render() {
     const {user, usernameChangeDialogOpen} = this.state;
 
     return (
       [
         <Polygon user={user} key="Polygon" />,
-        <button
-          key="registerUserButton"
-          onClick={this.registerUser}
-          style={{
-            position: 'absolute',
-            top: 10,
-            left: 10,
-          }} > start </button>
       ]
     )
   }
