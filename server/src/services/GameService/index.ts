@@ -25,8 +25,8 @@ class GameService {
         )
     }
 
-    public addTank(name: string): string {
-        const id = randomId().toString()
+    public addTank(name: string, id: string): string {
+        // const id = randomId().toString()
         this.tanks[id] = new Tank(name, id)
         console.log('this.tanks ==> ', this.tanks)
         return id

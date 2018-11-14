@@ -25,8 +25,11 @@ class SocketService {
     private bindSocketEvents() {
         if (this.socket) {
             this.socket.on(SOCKET_EVENTS.REGISTER_USER, (name: string, fn) => {
-                const tankId = gameService.addTank(name)
-                fn(tankId)
+                this.socket
+                if (this.socket) {
+                    gameService.addTank(name, this.socket.id)
+                    fn(this.socket.id)
+                }
             });
 
             this.socket.on(SOCKET_EVENTS.MOVE, ({id, direction}) => {
