@@ -16,12 +16,18 @@ class GameService {
 
     public startUpdatingSycle(emitUpdate: (tanks: ITanks) => void) {
         // emitUpdate - is a socket io event to update polygon 
-        setInterval(() => {emitUpdate(this.tanks)}, UPDATING_INTERVAL)
+        setInterval(() => {
+            // console.log('setInterval this.tanks ', this.tanks)
+            emitUpdate(this.tanks)
+        }, UPDATING_INTERVAL
+        )
     }
 
-    public addTank(name: string) {
+    public addTank(name: string): string {
         const id = randomId().toString()
         this.tanks[id] = new Tank(name, id)
+        console.log('this.tanks ==> ', this.tanks)
+        return id
     }
 
     public updateTank(tank: ITank) {
@@ -29,15 +35,22 @@ class GameService {
     }
 
     public moveTank(id: string, direction: direction) {
-        switch (direction) {
-            case DIRECTIONS.UP:
-                this.tanks[id].y + 1
-            case DIRECTIONS.DOWN:
-                this.tanks[id].y - 1
-            case DIRECTIONS.LEFT:
-                this.tanks[id].x - 1
-            case DIRECTIONS.RIGHT:
-                this.tanks[id].x + 1
+        if (this.tanks[id]) {
+            this.tanks[id].direction = direction
+            switch (direction) {
+                case DIRECTIONS.UP:
+                    this.tanks[id].y = this.tanks[id].y - 100
+                    break
+                case DIRECTIONS.DOWN:
+                    this.tanks[id].y = this.tanks[id].y + 100
+                    break
+                case DIRECTIONS.LEFT:
+                    this.tanks[id].x = this.tanks[id].x - 100
+                    break
+                case DIRECTIONS.RIGHT:
+                    this.tanks[id].x = this.tanks[id].x + 100
+                    break
+            }
         }
     }
 

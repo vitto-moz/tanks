@@ -7,7 +7,7 @@ class SocketService {
     private socket: Socket | null = null
     private io: Socket | null = null
 
-    constructor(){
+    constructor() {
         gameService.startUpdatingSycle(this.emitUpdate.bind(this))
     }
 
@@ -24,12 +24,12 @@ class SocketService {
 
     private bindSocketEvents() {
         if (this.socket) {
-            this.socket.on(SOCKET_EVENTS.REGISTER_USER, (name: string) => {
-                console.log('name', name)
-                gameService.addTank(name)
+            this.socket.on(SOCKET_EVENTS.REGISTER_USER, (name: string, fn) => {
+                const tankId = gameService.addTank(name)
+                fn(tankId)
             });
 
-            this.socket.on(SOCKET_EVENTS.MOVE, (id: string, direction: direction) => {
+            this.socket.on(SOCKET_EVENTS.MOVE, ({id, direction}) => {
                 gameService.moveTank(id, direction)
             });
 

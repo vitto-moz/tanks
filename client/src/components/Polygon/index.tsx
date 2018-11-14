@@ -99,8 +99,8 @@ class Polygon extends React.Component<Props, any> {
     return (
       <div style={styles.polygon}>
         {
-          Object.values(this.props.gameState).map((tank: ITank) => {
-            return <Tank tank={tank} />
+          Object.keys(this.props.gameState).map(id => {
+            return <Tank key={id} tank={this.props.gameState[id]} />
           })
         }
       </div>
