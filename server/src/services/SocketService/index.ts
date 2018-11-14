@@ -7,9 +7,12 @@ class SocketService {
     private socket: Socket | null = null
     private io: Socket | null = null
 
+    constructor(){
+        gameService.startUpdatingSycle(this.emitUpdate.bind(this))
+    }
+
     public listen(socket: Socket, io: Socket) {
         this.registerSocket(socket, io)
-        gameService.startUpdatingSycle(this.emitUpdate.bind(this))
         if (this.socket) this.bindSocketEvents()
     }
 
