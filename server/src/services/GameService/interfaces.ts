@@ -1,4 +1,4 @@
-export type direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
+export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
 
 export interface ITank {
     id: string
@@ -6,11 +6,11 @@ export interface ITank {
     hp: number
     x: number
     y: number
-    direction: direction
+    direction: Direction
 }
 
 export interface ITanks {
     [index: string]: ITank
 }
 
-export type directions =  {[k in direction]: direction}
+export type Directions =  {[k in Direction]: Direction}

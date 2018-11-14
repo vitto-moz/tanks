@@ -1,6 +1,6 @@
 import {Socket} from 'socket.io';
 import gameService from '../GameService';
-import {direction, ITanks, ITank} from '../GameService/interfaces';
+import {Direction, ITanks, ITank} from '../GameService/interfaces';
 import SOCKET_EVENTS from './socketEvents';
 
 class SocketService {
@@ -30,7 +30,7 @@ class SocketService {
             });
 
             this.socket.on(SOCKET_EVENTS.MOVE, ({id, direction}) => {
-                gameService.moveTank(id, direction)
+                gameService.registerMovement(id, direction)
             });
 
             this.socket.on(SOCKET_EVENTS.UPDATE_TANK, (tank: ITank) => {
