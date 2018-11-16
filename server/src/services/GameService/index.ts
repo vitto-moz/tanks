@@ -1,5 +1,4 @@
 import {Tank} from './tank.model';
-import randomId from '../../utils/randomId';
 import {ITanks, Direction, Directions, ITank} from './interfaces';
 
 export const DIRECTIONS: Directions = {
