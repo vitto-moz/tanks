@@ -1,5 +1,6 @@
 import {Tank} from './tank.model';
-import {ITanks, Direction, Directions, ITank} from './interfaces';
+import {ITanks, Direction, Directions, ITank, IGameState} from './interfaces';
+import GAME_STATE from './config';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -13,14 +14,15 @@ const MOVE_QUANTUM = 1
 
 class GameService {
     public tanks: ITanks = {}
+    public gameState: IGameState = GAME_STATE
     public tanksMovements: {[index: string]: Direction} = {}
 
-    public startUpdatingSycle(emitUpdate: (tanks: ITanks) => void) {
+    public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
         // emitUpdate - is a socket io event to update polygon 
         setInterval(() => {
             // console.log('setInterval this.tanks ', this.tanks)
             this.moveTanks()
-            emitUpdate(this.tanks)
+            emitUpdate(this.gameState)
         }, UPDATING_INTERVAL
         )
     }
@@ -41,6 +43,7 @@ class GameService {
                 this.moveTank(id, this.tanksMovements[id])
             })
         }
+        this.gameState.tanks = this.tanks
         this.tanksMovements = {}
     }
 

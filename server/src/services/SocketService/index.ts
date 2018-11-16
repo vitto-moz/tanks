@@ -1,3 +1,4 @@
+import { IGameState } from './../GameService/interfaces';
 import {Socket} from 'socket.io';
 import gameService from '../GameService';
 import {Direction, ITanks, ITank} from '../GameService/interfaces';
@@ -16,9 +17,9 @@ class SocketService {
         if (this.socket) this.bindSocketEvents()
     }
 
-    private emitUpdate(tanks: ITanks) {
+    private emitUpdate(gameState: IGameState) {
         if (this.io) {
-            this.io.emit(SOCKET_EVENTS.UPDATE, tanks);
+            this.io.emit(SOCKET_EVENTS.UPDATE, gameState);
         }
     }
 
