@@ -77,27 +77,35 @@ class GameService {
     private checkObstacles() {
         Object.keys(this.possibleTanks)
             .map(currentTankId => {
+                console.log('currentTankId ', currentTankId)
                 return {
                     id: currentTankId,
                     obstacles: Object.keys(this.possibleTanks).map((tankToCheckId) => {
                         if (tankToCheckId !== currentTankId) {
                             return {
                                 id: currentTankId,
-                                obstacle: this.possibleTanks[tankToCheckId].x !== this.possibleTanks[currentTankId].x
-                                    && this.possibleTanks[tankToCheckId].y !== this.possibleTanks[currentTankId].y
+                                obstacle: this.possibleTanks[tankToCheckId].x === this.possibleTanks[currentTankId].x
+                                    && this.possibleTanks[tankToCheckId].y === this.possibleTanks[currentTankId].y
                             }
+                        } else {
+                            return null
                         }
-                    })
+                    }).filter(tankObstacle => tankObstacle !== null)
                 }
             })
             .map((tankObstacle) => {
+                // if no obstacles we set false
                 return {
-                    ...tankObstacle,
-                    obstacle: tankObstacle.obstacles.reduce((aggregatedObstacle, obstacle) => aggregatedObstacle && obstacle)
+                    id: tankObstacle.id,
+                    obstacle: tankObstacle.obstacles.length !== 0
+                        ? tankObstacle.obstacles.reduce((aggregatedObstacle, obstacle) => aggregatedObstacle || obstacle)
+                        : false
                 }
             })
             .map(tankObstacle => {
-                if (tankObstacle.obstacle) {
+                console.log('tankObstacle ', tankObstacle)
+                if (!tankObstacle.obstacle) {
+                    console.log('tankObstacle.obstacle ', tankObstacle.obstacle)
                     this.tanks[tankObstacle.id] = this.possibleTanks[tankObstacle.id]
                 }
             })
