@@ -10,6 +10,7 @@ export const DIRECTIONS: Directions = {
 }
 
 const UPDATING_INTERVAL = 1000
+const MOVE_QUANTUM = 1
 
 class GameService {
     public tanks: ITanks = {}
@@ -26,7 +27,6 @@ class GameService {
     }
 
     public addTank(name: string, id: string): string {
-        // const id = randomId().toString()
         this.tanks[id] = new Tank(name, id)
         console.log('this.tanks ==> ', this.tanks)
         return id
@@ -54,16 +54,16 @@ class GameService {
             this.tanks[id].direction = direction
             switch (direction) {
                 case DIRECTIONS.UP:
-                    this.tanks[id].y = this.tanks[id].y - 100
+                    this.tanks[id].y = this.tanks[id].y - MOVE_QUANTUM
                     break
                 case DIRECTIONS.DOWN:
-                    this.tanks[id].y = this.tanks[id].y + 100
+                    this.tanks[id].y = this.tanks[id].y + MOVE_QUANTUM
                     break
                 case DIRECTIONS.LEFT:
-                    this.tanks[id].x = this.tanks[id].x - 100
+                    this.tanks[id].x = this.tanks[id].x - MOVE_QUANTUM
                     break
                 case DIRECTIONS.RIGHT:
-                    this.tanks[id].x = this.tanks[id].x + 100
+                    this.tanks[id].x = this.tanks[id].x + MOVE_QUANTUM
                     break
             }
         }
