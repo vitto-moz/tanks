@@ -1,4 +1,4 @@
-const styles = {
+const styles: any = {
     polygon: {
         position: 'relative',
         backgroundColor: 'black',
@@ -6,6 +6,6 @@ const styles = {
         height: '100%',
         overflow: 'hidden'
     }
-} as React.CSSProperties;
+};
 
-export default styles
+export default styles;

@@ -2,15 +2,15 @@ import * as React from "react";
 import {Message, Action} from "../../model";
 import styles from './polygonStyles'
 import Tank from '../Tank';
-import {ITanks, ITank} from '../../services/socketService/interfaces';
+import {IGameState} from '../../services/socketService/interfaces';
 
 interface Props {
-    gameState: ITanks
-}
+    gameState: IGameState
+};
 
 interface State {
     messages: Message[];
-}
+};
 
 class Polygon extends React.Component<Props, any> {
 
@@ -24,8 +24,8 @@ class Polygon extends React.Component<Props, any> {
         return (
             <div style={styles.polygon}>
                 {
-                    Object.keys(this.props.gameState).map(id => {
-                        return <Tank key={id} tank={this.props.gameState[id]}/>
+                    Object.keys(this.props.gameState.tanks).map(id => {
+                        return <Tank key={id} tank={this.props.gameState.tanks[id]}/>
                     })
                 }
             </div>
@@ -33,4 +33,4 @@ class Polygon extends React.Component<Props, any> {
     }
 }
 
-export default Polygon
+export default Polygon;

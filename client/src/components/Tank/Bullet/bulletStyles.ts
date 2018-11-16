@@ -1,4 +1,4 @@
-const styles = {
+const styles: any = {
   bullet: {
     position: 'absolute',
     backgroundColor: 'red',
@@ -8,6 +8,6 @@ const styles = {
     top: '45px',
     zIndex: 0
   }
-} as React.CSSProperties 
+};
 
 export default styles

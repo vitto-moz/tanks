@@ -1,28 +1,28 @@
 import * as React from "react";
 import socketService from '../services/socketService';
 import Polygon from './Polygon';
-import {IGameState} from "../services/socketService/interfaces";
+import {IConfig, IEnvironment, IGameState, ITanks} from "../services/socketService/interfaces";
 
-class App extends React.Component<{}, IGameState> {
-    state: GameState = {};
+interface State {
+    gameState: IGameState | null,
+}
+
+class App extends React.Component<{}, State> {
+    state: State = {
+        gameState: null,
+    };
 
     constructor(props: {}) {
-
         super(props);
-
         socketService.onUpdate((gameState: IGameState) => {
-            this.setState(gameState);
+            this.setState({gameState});
         });
     }
 
-    componentDidMount() {
-        socketService.getGameState((gameState: IGameState) => {
-            this.setState(gameState);
-        })
-    }
-
     render() {
-        return ([<Polygon gameState={this.state} key="Polygon"/>])
+        return !!this.state.gameState
+            ? <Polygon gameState={this.state.gameState} key="Polygon"/>
+            : null
     }
 }
 
