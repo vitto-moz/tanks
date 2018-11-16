@@ -1,7 +1,7 @@
-import { IGameState } from './../GameService/interfaces';
+import {IGameState} from './../GameService/interfaces';
 import {Socket} from 'socket.io';
 import gameService from '../GameService';
-import {Direction, ITanks, ITank} from '../GameService/interfaces';
+import {ITank} from '../GameService/interfaces';
 import SOCKET_EVENTS from './socketEvents';
 
 class SocketService {

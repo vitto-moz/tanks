@@ -14,6 +14,7 @@ const MOVE_QUANTUM = 1
 
 class GameService {
     public tanks: ITanks = {}
+    public possibleTanks: ITanks = {}
     public gameState: IGameState = GAME_STATE
     public tanksMovements: {[index: string]: Direction} = {}
 
@@ -29,6 +30,7 @@ class GameService {
 
     public addTank(name: string, id: string): string {
         this.tanks[id] = new Tank(name, id)
+        this.possibleTanks[id] = new Tank(name, id)
         console.log('this.tanks ==> ', this.tanks)
         return id
     }
@@ -40,9 +42,10 @@ class GameService {
     private moveTanks() {
         if (this.tanksMovements) {
             Object.keys(this.tanksMovements).map(id => {
-                this.moveTank(id, this.tanksMovements[id])
+                this.initateTankMove(id, this.tanksMovements[id])
             })
         }
+        this.checkObstacles()
         this.gameState.tanks = this.tanks
         this.tanksMovements = {}
     }
@@ -51,24 +54,53 @@ class GameService {
         this.tanksMovements[id] = direction
     }
 
-    public moveTank(id: string, direction: Direction) {
+    public initateTankMove(id: string, direction: Direction) {
         if (this.tanks[id]) {
             this.tanks[id].direction = direction
             switch (direction) {
                 case DIRECTIONS.UP:
-                    this.tanks[id].y = this.tanks[id].y - MOVE_QUANTUM
+                    this.possibleTanks[id].y = this.tanks[id].y - MOVE_QUANTUM
                     break
                 case DIRECTIONS.DOWN:
-                    this.tanks[id].y = this.tanks[id].y + MOVE_QUANTUM
+                    this.possibleTanks[id].y = this.tanks[id].y + MOVE_QUANTUM
                     break
                 case DIRECTIONS.LEFT:
-                    this.tanks[id].x = this.tanks[id].x - MOVE_QUANTUM
+                    this.possibleTanks[id].x = this.tanks[id].x - MOVE_QUANTUM
                     break
                 case DIRECTIONS.RIGHT:
-                    this.tanks[id].x = this.tanks[id].x + MOVE_QUANTUM
+                    this.possibleTanks[id].x = this.tanks[id].x + MOVE_QUANTUM
                     break
             }
         }
+    }
+
+    private checkObstacles() {
+        Object.keys(this.possibleTanks)
+            .map(currentTankId => {
+                return {
+                    id: currentTankId,
+                    obstacles: Object.keys(this.possibleTanks).map((tankToCheckId) => {
+                        if (tankToCheckId !== currentTankId) {
+                            return {
+                                id: currentTankId,
+                                obstacle: this.possibleTanks[tankToCheckId].x !== this.possibleTanks[currentTankId].x
+                                    && this.possibleTanks[tankToCheckId].y !== this.possibleTanks[currentTankId].y
+                            }
+                        }
+                    })
+                }
+            })
+            .map((tankObstacle) => {
+                return {
+                    ...tankObstacle,
+                    obstacle: tankObstacle.obstacles.reduce((aggregatedObstacle, obstacle) => aggregatedObstacle && obstacle)
+                }
+            })
+            .map(tankObstacle => {
+                if (tankObstacle.obstacle) {
+                    this.tanks[tankObstacle.id] = this.possibleTanks[tankObstacle.id]
+                }
+            })
     }
 
 }
