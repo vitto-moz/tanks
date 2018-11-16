@@ -5,107 +5,32 @@ import Tank from '../Tank';
 import {ITanks, ITank} from '../../services/socketService/interfaces';
 
 interface Props {
-  gameState: ITanks
+    gameState: ITanks
 }
 
 interface State {
-  messages: Message[];
+    messages: Message[];
 }
 
 class Polygon extends React.Component<Props, any> {
-  private listElement: HTMLDivElement | null = null;
 
-  state: State = {
-    messages: []
-  };
+    private listElement: HTMLDivElement | null = null;
 
-  componentDidMount() {
-    // this.sendNotification(null, Action.JOINED);
-  }
+    state: State = {
+        messages: []
+    };
 
-  componentWillReceiveProps(nextProps: Props) {
-    // if (nextProps.user !== this.props.user) {
-    //   this.sendNotification(
-    //     {
-    //       username: nextProps.user.name,
-    //       previousUsername: this.props.user.name
-    //     },
-    //     Action.RENAME
-    //   );
-    // }
-  }
-
-  private sendNotification(params: any, action: Action): void {
-    // if (!this.socketService) {
-    //   return;
-    // }
-    // const {user} = this.props;
-
-    // let message: NewMessage | null = null;
-
-    // if (action === Action.JOINED) {
-    //   message = {
-    //     from: user,
-    //     action
-    //   };
-    // } else if (action === Action.RENAME) {
-    //   message = {
-    //     from: user,
-    //     action,
-    //     content: params
-    //   };
-    // }
-
-    // if (message) {
-    //   this.socketService.send(message);
-    // }
-  }
-
-  scrollToBottom = () => {
-    if (!this.listElement) {
-      return;
+    render() {
+        return (
+            <div style={styles.polygon}>
+                {
+                    Object.keys(this.props.gameState).map(id => {
+                        return <Tank key={id} tank={this.props.gameState[id]}/>
+                    })
+                }
+            </div>
+        );
     }
-
-    // evil hack, but there seems to be way to get
-    // the native root element of the List component
-    const parent = this.listElement.parentElement;
-
-    if (!parent) {
-      return;
-    }
-
-    parent.scrollTop = parent.scrollHeight;
-  };
-
-  componentWillUnmount() {
-    // todo: disconnect
-  }
-
-  // onChatMessageEnter = (message: string) => {
-  //   if (!this.socketService) {
-  //     return;
-  //   }
-
-  //   const {user} = this.props;
-  //   if (user) {
-  //     this.socketService.send({
-  //       from: user,
-  //       content: message
-  //     });
-  //   }
-  // };
-
-  render() {
-    return (
-      <div style={styles.polygon}>
-        {
-          Object.keys(this.props.gameState).map(id => {
-            return <Tank key={id} tank={this.props.gameState[id]} />
-          })
-        }
-      </div>
-    );
-  }
 }
 
 export default Polygon

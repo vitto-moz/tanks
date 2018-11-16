@@ -1,5 +1,6 @@
 const SOCKET_EVENTS = {
-    UPDATE: 'UPDATE' 
-}
+    UPDATE: 'UPDATE',
+    GET_GAME_STATE: 'GET_GAME_STATE'
+};
 
-export default SOCKET_EVENTS
+export default SOCKET_EVENTS;

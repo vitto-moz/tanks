@@ -1,42 +1,29 @@
 import * as React from "react";
 import socketService from '../services/socketService';
 import Polygon from './Polygon';
+import {IGameState} from "../services/socketService/interfaces";
 
-export type direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
-
-export interface ITank {
-  id: string
-  name: string
-  hp: number
-  x: number
-  y: number
-  direction: direction
-}
-
-export interface ITanks {
-  [index: string]: ITank
-}
-
-interface GameState extends ITanks {}
-
-class App extends React.Component<{}, GameState> {
+class App extends React.Component<{}, IGameState> {
     state: GameState = {};
 
     constructor(props: {}) {
-      super(props)
-      socketService.onUpdate((gameState: ITanks) => {
-        this.setState(gameState)
-      })
+
+        super(props);
+
+        socketService.onUpdate((gameState: IGameState) => {
+            this.setState(gameState);
+        });
+    }
+
+    componentDidMount() {
+        socketService.getGameState((gameState: IGameState) => {
+            this.setState(gameState);
+        })
     }
 
     render() {
-      return (
-        [
-          <Polygon gameState={this.state} key="Polygon" />,
-        ]
-      )
+        return ([<Polygon gameState={this.state} key="Polygon"/>])
     }
+}
 
-  }
-
-export default App
+export default App;
