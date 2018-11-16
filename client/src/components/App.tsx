@@ -1,7 +1,7 @@
 import * as React from "react";
 import socketService from '../services/socketService';
 import Polygon from './Polygon';
-import {IConfig, IEnvironment, IGameState, ITanks} from "../services/socketService/interfaces";
+import {IGameState} from "../services/socketService/interfaces";
 
 interface State {
     gameState: IGameState | null,
