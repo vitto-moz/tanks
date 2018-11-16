@@ -58,7 +58,6 @@ interface State {
 
 class Tank extends React.PureComponent<Props, State> {
 
-    private onKeyPress$: Subject<number> = new Subject();
     private tankStyles: any;
 
     state: State = {

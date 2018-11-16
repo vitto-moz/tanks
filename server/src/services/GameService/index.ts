@@ -77,16 +77,12 @@ class GameService {
     private checkObstacles() {
         Object.keys(this.possibleTanks)
             .map(currentTankId => {
-                console.log('currentTankId ', currentTankId)
                 return {
                     id: currentTankId,
                     obstacles: Object.keys(this.possibleTanks).map((tankToCheckId) => {
                         if (tankToCheckId !== currentTankId) {
-                            return {
-                                id: currentTankId,
-                                obstacle: this.possibleTanks[tankToCheckId].x === this.possibleTanks[currentTankId].x
-                                    && this.possibleTanks[tankToCheckId].y === this.possibleTanks[currentTankId].y
-                            }
+                            return this.possibleTanks[tankToCheckId].x === this.possibleTanks[currentTankId].x
+                                && this.possibleTanks[tankToCheckId].y === this.possibleTanks[currentTankId].y
                         } else {
                             return null
                         }
@@ -95,6 +91,8 @@ class GameService {
             })
             .map((tankObstacle) => {
                 // if no obstacles we set false
+                console.log('tankObstacle id ====>>>>>>', tankObstacle.id)
+                console.log('tankObstacle before ', tankObstacle)
                 return {
                     id: tankObstacle.id,
                     obstacle: tankObstacle.obstacles.length !== 0
@@ -105,7 +103,8 @@ class GameService {
             .map(tankObstacle => {
                 console.log('tankObstacle ', tankObstacle)
                 if (!tankObstacle.obstacle) {
-                    console.log('tankObstacle.obstacle ', tankObstacle.obstacle)
+                    // console.log('tankObstacle.obstacle ', tankObstacle.obstacle)
+                    // console.log('this.possibleTanks[tankObstacle.id] ', this.possibleTanks[tankObstacle.id])
                     this.tanks[tankObstacle.id] = this.possibleTanks[tankObstacle.id]
                 }
             })
