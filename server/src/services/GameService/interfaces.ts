@@ -13,4 +13,32 @@ export interface ITanks {
     [index: string]: ITank
 }
 
-export type Directions =  {[k in Direction]: Direction}
+export interface IConfig {
+    x: number
+    y: number
+}
+
+export interface IWall {
+    x: number
+    y: number
+    hp: number
+}
+
+export interface IWater {
+    x: number
+    y: number
+    hp: number
+}
+
+export interface IEnvironment {
+    walls: {[index: string]: IWall}
+    water: {[index: string]: IWater}
+}
+
+export interface IGameState {
+    tanks: ITanks
+    environment: IEnvironment
+    config: IConfig
+}
+
+export type Directions = {[k in Direction]: Direction}

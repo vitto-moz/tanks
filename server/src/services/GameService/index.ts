@@ -1,6 +1,6 @@
 import {Tank} from './tank.model';
-import randomId from '../../utils/randomId';
-import {ITanks, Direction, Directions, ITank} from './interfaces';
+import {ITanks, Direction, Directions, ITank, IGameState} from './interfaces';
+import GAME_STATE from './config';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -10,23 +10,24 @@ export const DIRECTIONS: Directions = {
 }
 
 const UPDATING_INTERVAL = 1000
+const MOVE_QUANTUM = 1
 
 class GameService {
     public tanks: ITanks = {}
+    public gameState: IGameState = GAME_STATE
     public tanksMovements: {[index: string]: Direction} = {}
 
-    public startUpdatingSycle(emitUpdate: (tanks: ITanks) => void) {
+    public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
         // emitUpdate - is a socket io event to update polygon 
         setInterval(() => {
             // console.log('setInterval this.tanks ', this.tanks)
             this.moveTanks()
-            emitUpdate(this.tanks)
+            emitUpdate(this.gameState)
         }, UPDATING_INTERVAL
         )
     }
 
     public addTank(name: string, id: string): string {
-        // const id = randomId().toString()
         this.tanks[id] = new Tank(name, id)
         console.log('this.tanks ==> ', this.tanks)
         return id
@@ -42,6 +43,7 @@ class GameService {
                 this.moveTank(id, this.tanksMovements[id])
             })
         }
+        this.gameState.tanks = this.tanks
         this.tanksMovements = {}
     }
 
@@ -54,16 +56,16 @@ class GameService {
             this.tanks[id].direction = direction
             switch (direction) {
                 case DIRECTIONS.UP:
-                    this.tanks[id].y = this.tanks[id].y - 100
+                    this.tanks[id].y = this.tanks[id].y - MOVE_QUANTUM
                     break
                 case DIRECTIONS.DOWN:
-                    this.tanks[id].y = this.tanks[id].y + 100
+                    this.tanks[id].y = this.tanks[id].y + MOVE_QUANTUM
                     break
                 case DIRECTIONS.LEFT:
-                    this.tanks[id].x = this.tanks[id].x - 100
+                    this.tanks[id].x = this.tanks[id].x - MOVE_QUANTUM
                     break
                 case DIRECTIONS.RIGHT:
-                    this.tanks[id].x = this.tanks[id].x + 100
+                    this.tanks[id].x = this.tanks[id].x + MOVE_QUANTUM
                     break
             }
         }
