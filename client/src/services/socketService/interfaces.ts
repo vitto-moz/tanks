@@ -1,4 +1,9 @@
-export type direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+
+export interface IBullet {
+    onFly: boolean;
+    direction: Direction;
+}
 
 export interface ITank {
     id: string
@@ -6,7 +11,9 @@ export interface ITank {
     hp: number
     x: number
     y: number
-    direction: direction
+    direction: Direction
+    bullets: IBullet[]
+    fire: boolean
 };
 
 export interface ITanks {
@@ -29,4 +36,4 @@ export interface IGameState {
     config: IConfig
 }
 
-export type directions = {[k in direction]: direction};
+export type Directions = {[k in Direction]: Direction};
