@@ -17,8 +17,6 @@ const UPDATING_INTERVAL = 1000
 const MOVE_QUANTUM = 1
 
 class GameService {
-    // public tanks: ITanks = {}
-    // public possibleTanks: ITanks = {}
     public gameState: IGameState = GAME_STATE
     public tanksMovements: ITanksMovements = {}
 
@@ -30,7 +28,6 @@ class GameService {
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
         // emitUpdate - is a socket io event to update polygon 
         setInterval(() => {
-            // console.log('setInterval this.tanks ', this.tanks)
             this.moveTanks(this.tanksMovements, this.gameState.tanks)
             emitUpdate(this.gameState)
         }, UPDATING_INTERVAL
@@ -47,11 +44,8 @@ class GameService {
     }
 
     private moveTanks(tanksMovements: ITanksMovements, tanks: ITanks) {
-        // console.log('tanks ', tanks)
         const possibleTanks = this.getPossibleTanks(tanksMovements, tanks)
-        // console.log('possibleTanks ', possibleTanks)
-        const checkedTanks = this.getCheckedTanks(possibleTanks)
-        // console.log('checkedTanks ', checkedTanks)
+        const checkedTanks = this.getCheckedTanks(possibleTanks, tanks)
         this.gameState.tanks = {...tanks, ...checkedTanks}
         this.tanksMovements = {}
     }
@@ -87,11 +81,10 @@ class GameService {
                     break
             }
         }
-        console.log('possibleTank ', possibleTank)
         return possibleTank
     }
 
-    private getCheckedTanks(possibleTanks: ITanks): ITanks {
+    private getCheckedTanks(possibleTanks: ITanks, tanks: ITanks): ITanks {
         Object.keys(possibleTanks)
             .map(currentTankId => {
                 return {
@@ -108,22 +101,19 @@ class GameService {
             })
             .map((tankObstacle) => {
                 // if no obstacles we set false
-                const obstacle = {
+                return {
                     id: tankObstacle.id,
                     obstacle: tankObstacle.obstacles.length !== 0
                         ? tankObstacle.obstacles.reduce((aggregatedObstacle, obstacle) => aggregatedObstacle || obstacle)
                         : false
                 }
-
-                // if (obstacle.obstacle) {
-                //     debugger
-                //     console.log(this.tanks)
-                // }
-                return obstacle
             })
             .map(tankObstacle => {
                 if (tankObstacle.obstacle) {
-                    delete possibleTanks[tankObstacle.id]
+                    possibleTanks[tankObstacle.id] = {
+                        ...tanks[tankObstacle.id],
+                        direction: possibleTanks[tankObstacle.id].direction
+                    }
                 }
             })
 
