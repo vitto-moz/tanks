@@ -9,80 +9,97 @@ export const DIRECTIONS: Directions = {
     RIGHT: 'RIGHT',
 }
 
+interface ITanksMovements {
+    [index: string]: Direction
+}
+
 const UPDATING_INTERVAL = 1000
 const MOVE_QUANTUM = 1
 
 class GameService {
-    public tanks: ITanks = {}
-    public possibleTanks: ITanks = {}
+    // public tanks: ITanks = {}
+    // public possibleTanks: ITanks = {}
     public gameState: IGameState = GAME_STATE
-    public tanksMovements: {[index: string]: Direction} = {}
+    public tanksMovements: ITanksMovements = {}
+
+    constructor() {
+        this.moveTanks = this.moveTanks.bind(this)
+        this.getCheckedTanks = this.getCheckedTanks.bind(this)
+    }
 
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
         // emitUpdate - is a socket io event to update polygon 
         setInterval(() => {
             // console.log('setInterval this.tanks ', this.tanks)
-            this.moveTanks()
+            this.moveTanks(this.tanksMovements, this.gameState.tanks)
             emitUpdate(this.gameState)
         }, UPDATING_INTERVAL
         )
     }
 
     public addTank(name: string, id: string): string {
-        this.tanks[id] = new Tank(name, id)
-        this.possibleTanks[id] = new Tank(name, id)
-        console.log('this.tanks ==> ', this.tanks)
+        this.gameState.tanks[id] = new Tank(name, id)
         return id
     }
 
     public updateTank(tank: ITank) {
-        this.tanks[tank.id] = tank
+        this.gameState.tanks[tank.id] = tank
     }
 
-    private moveTanks() {
-        if (this.tanksMovements) {
-            Object.keys(this.tanksMovements).map(id => {
-                this.initateTankMove(id, this.tanksMovements[id])
-            })
-        }
-        this.checkObstacles()
-        this.gameState.tanks = this.tanks
+    private moveTanks(tanksMovements: ITanksMovements, tanks: ITanks) {
+        // console.log('tanks ', tanks)
+        const possibleTanks = this.getPossibleTanks(tanksMovements, tanks)
+        // console.log('possibleTanks ', possibleTanks)
+        const checkedTanks = this.getCheckedTanks(possibleTanks)
+        // console.log('checkedTanks ', checkedTanks)
+        this.gameState.tanks = {...tanks, ...checkedTanks}
         this.tanksMovements = {}
+    }
+
+    private getPossibleTanks(tanksMovements: ITanksMovements, tanks: ITanks): ITanks {
+        const possibleTanks: ITanks = {}
+        Object.keys(tanksMovements).map(id => {
+            possibleTanks[id] = this.getPossibleTankPosition(id, tanksMovements[id], tanks)
+        })
+        return {...tanks, ...possibleTanks}
     }
 
     public registerMovement(id: string, direction: Direction) {
         this.tanksMovements[id] = direction
     }
 
-    public initateTankMove(id: string, direction: Direction) {
-        if (this.tanks[id]) {
-            this.tanks[id].direction = direction
+    public getPossibleTankPosition(id: string, direction: Direction, tanks: ITanks): ITank {
+        const possibleTank: ITank = {...tanks[id]}
+        if (tanks[id]) {
+            possibleTank.direction = direction
             switch (direction) {
                 case DIRECTIONS.UP:
-                    this.possibleTanks[id].y = this.tanks[id].y - MOVE_QUANTUM
+                    possibleTank.y = tanks[id].y - MOVE_QUANTUM
                     break
                 case DIRECTIONS.DOWN:
-                    this.possibleTanks[id].y = this.tanks[id].y + MOVE_QUANTUM
+                    possibleTank.y = tanks[id].y + MOVE_QUANTUM
                     break
                 case DIRECTIONS.LEFT:
-                    this.possibleTanks[id].x = this.tanks[id].x - MOVE_QUANTUM
+                    possibleTank.x = tanks[id].x - MOVE_QUANTUM
                     break
                 case DIRECTIONS.RIGHT:
-                    this.possibleTanks[id].x = this.tanks[id].x + MOVE_QUANTUM
+                    possibleTank.x = tanks[id].x + MOVE_QUANTUM
                     break
             }
         }
+        console.log('possibleTank ', possibleTank)
+        return possibleTank
     }
 
-    private checkObstacles() {
-        Object.keys(this.possibleTanks)
+    private getCheckedTanks(possibleTanks: ITanks): ITanks {
+        Object.keys(possibleTanks)
             .map(currentTankId => {
                 return {
                     id: currentTankId,
-                    obstacles: Object.keys(this.possibleTanks).map((tankToCheckId) => {
+                    obstacles: Object.keys(possibleTanks).map((tankToCheckId) => {
                         if (tankToCheckId !== currentTankId) {
-                            return this.possibleTanks[tankToCheckId].x === this.possibleTanks[currentTankId].x
-                                && this.possibleTanks[tankToCheckId].y === this.possibleTanks[currentTankId].y
+                            return possibleTanks[tankToCheckId].x === possibleTanks[currentTankId].x
+                                && possibleTanks[tankToCheckId].y === possibleTanks[currentTankId].y
                         } else {
                             return null
                         }
@@ -91,23 +108,26 @@ class GameService {
             })
             .map((tankObstacle) => {
                 // if no obstacles we set false
-                console.log('tankObstacle id ====>>>>>>', tankObstacle.id)
-                console.log('tankObstacle before ', tankObstacle)
-                return {
+                const obstacle = {
                     id: tankObstacle.id,
                     obstacle: tankObstacle.obstacles.length !== 0
                         ? tankObstacle.obstacles.reduce((aggregatedObstacle, obstacle) => aggregatedObstacle || obstacle)
                         : false
                 }
+
+                // if (obstacle.obstacle) {
+                //     debugger
+                //     console.log(this.tanks)
+                // }
+                return obstacle
             })
             .map(tankObstacle => {
-                console.log('tankObstacle ', tankObstacle)
-                if (!tankObstacle.obstacle) {
-                    // console.log('tankObstacle.obstacle ', tankObstacle.obstacle)
-                    // console.log('this.possibleTanks[tankObstacle.id] ', this.possibleTanks[tankObstacle.id])
-                    this.tanks[tankObstacle.id] = this.possibleTanks[tankObstacle.id]
+                if (tankObstacle.obstacle) {
+                    delete possibleTanks[tankObstacle.id]
                 }
             })
+
+        return possibleTanks
     }
 
 }

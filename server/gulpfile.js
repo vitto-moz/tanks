@@ -21,6 +21,8 @@ gulp.task('run', ['build'], () => {
         delay: 10,
         script: 'dist/index.js',
         ext: 'ts',
+        // exec: 'node --inspect-brk',
+        // exec: 'node inspect',
         watch: 'src',
     })
 });
