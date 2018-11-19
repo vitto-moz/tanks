@@ -1,6 +1,6 @@
 const styles: any = {
     tank: {
-        position: 'relative',
+        position: 'absolute',
         backgroundColor: 'white',
         width: '100px',
         height: '100px',
