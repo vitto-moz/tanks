@@ -118,13 +118,13 @@ class Tank extends React.PureComponent<Props, State> {
     private onFire(direction: Direction) {
         this.setState(prevState => {
             const bullets = [...prevState.bullets]
-            bullets.push({onFly: true, direction})
+            // bullets.push({onFly: true, direction})
             return {fire: true, bullets}
         }, () => {
             setTimeout(() => {
                 this.setState(prevState => {
                     const bullets = prevState.bullets
-                    bullets[bullets.length - 1] = {onFly: false, direction}
+                    // bullets[bullets.length - 1] = {onFly: false, direction}
                     return {bullets}
                 })
             }, 3000)
@@ -135,7 +135,7 @@ class Tank extends React.PureComponent<Props, State> {
         this.setState(prevState => {
             const bullets = [...prevState.bullets]
             const bulletOnFinish = {...bullets[index]}
-            bulletOnFinish.onFly = false
+            // bulletOnFinish.onFly = false
             bullets[index] = bulletOnFinish
             return {bullets}
 
@@ -170,7 +170,7 @@ class Tank extends React.PureComponent<Props, State> {
                             onFinish={this.onFireFinish}
                         />
                         : null
-                })}
+                })} */}
             </div>
         );
     }

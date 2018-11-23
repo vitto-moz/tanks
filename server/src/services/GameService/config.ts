@@ -2,6 +2,7 @@ import {IGameState} from './interfaces';
 
 const GAME_STATE: IGameState = {
     tanks: {},
+    bullets: [],
     environment: {
         walls: {},
         water: {},
