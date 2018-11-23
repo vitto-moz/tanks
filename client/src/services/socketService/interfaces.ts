@@ -14,6 +14,7 @@ export interface ITank {
     direction: Direction
     bullets: IBullet[]
     fire: boolean
+    skinUrl: string
 };
 
 export interface ITanks {

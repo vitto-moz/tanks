@@ -105,14 +105,39 @@ class Tank extends React.PureComponent<Props, State> {
         })
     }
 
+    private getTankStyles() {
+        switch (this.props.tank.direction) {
+            case 'UP':
+                return {
+                    transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${0}deg)`
+                }
+            case 'DOWN':
+                return {
+                    transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${180}deg)`
+                }
+            case 'LEFT':
+                return {
+                    transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${-90}deg)`
+                }
+            case 'RIGHT':
+                return {
+                    transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${90}deg)`
+                }
+        }
+    }
+
     render() {
         return (
             <div style={{
                 ...this.tankStyles,
-                transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px)`,
-                transition: '1s linear'
+                transition: 'all 1s linear, rotate 0s linear 0s',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundImage: `url(${this.props.tank.skinUrl})`,
+                ...this.getTankStyles()
             }}>
-                <Trunk direction={this.props.tank.direction} />
+                {/*<Trunk direction={this.props.tank.direction} />*/}
                 {this.state.bullets.map((bullet, index) => {
                     return bullet.onFly
                         ? <Bullet
