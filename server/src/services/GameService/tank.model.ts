@@ -1,4 +1,4 @@
-import {ITank, Direction} from './interfaces';
+import {ITank, Direction, IBullet} from './interfaces';
 
 export class Tank implements ITank {
     public id: string
@@ -7,6 +7,9 @@ export class Tank implements ITank {
     public x: number
     public y: number
     public direction: Direction
+    public fire: boolean
+    public bullets: IBullet[]
+    public skinUrl: string 
 
     constructor(name: string, id: string) {
         this.id = id
@@ -15,5 +18,8 @@ export class Tank implements ITank {
         this.x = 0
         this.y = 0
         this.direction = 'UP'
+        this.fire = false
+        this.skinUrl = 'https://www.clipartmax.com/png/middle/77-775699_cartoon-tank-t-34-top-view-png-clipart-tank-top-view-vector.png'
+        this.bullets = []
     }
 }

@@ -19,6 +19,7 @@ const MOVE_QUANTUM = 1
 class GameService {
     public gameState: IGameState = GAME_STATE
     public tanksMovements: ITanksMovements = {}
+    public tanksFires: string[] = []
 
     constructor() {
         this.moveTanks = this.moveTanks.bind(this)
@@ -28,8 +29,9 @@ class GameService {
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
         // emitUpdate - is a socket io event to update polygon 
         setInterval(() => {
-            this.moveTanks(this.tanksMovements, this.gameState.tanks)
+            this.moveTanks(this.tanksMovements, this.tanksFires, this.gameState.tanks)
             emitUpdate(this.gameState)
+            this.clean()
         }, UPDATING_INTERVAL
         )
     }
@@ -43,11 +45,29 @@ class GameService {
         this.gameState.tanks[tank.id] = tank
     }
 
-    private moveTanks(tanksMovements: ITanksMovements, tanks: ITanks) {
+    private moveTanks(tanksMovements: ITanksMovements, tanksFires: string[], tanks: ITanks) {
         const possibleTanks = this.getPossibleTanks(tanksMovements, tanks)
         const checkedTanks = this.getCheckedTanks(possibleTanks, tanks)
-        this.gameState.tanks = {...tanks, ...checkedTanks}
+        const tanksWithFires = this.getTanksWithFire(checkedTanks, tanksFires)
+        console.log('tanksWithFires ', tanksWithFires)
+        this.gameState.tanks = tanksWithFires
+        // this.gameState.tanks = checkedTanks
+    }
+
+    private clean() {
         this.tanksMovements = {}
+        this.tanksFires = []
+        Object.keys(this.gameState.tanks).map((tankId: string) => {
+            return this.gameState.tanks[tankId].fire = false
+        })
+    }
+
+    private getTanksWithFire(checkedTanks: ITanks, tanksFire: string[]): ITanks {
+        tanksFire.map(tankId => {
+            checkedTanks[tankId].fire = true
+        })
+        console.log('checkedTanks ', checkedTanks)
+        return checkedTanks
     }
 
     private getPossibleTanks(tanksMovements: ITanksMovements, tanks: ITanks): ITanks {
@@ -82,6 +102,10 @@ class GameService {
             }
         }
         return possibleTank
+    }
+
+    public fire(id: string) {
+        this.tanksFires.push(id)
     }
 
     private getCheckedTanks(possibleTanks: ITanks, tanks: ITanks): ITanks {

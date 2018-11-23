@@ -1,5 +1,10 @@
 export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
 
+export interface IBullet {
+    onFly: boolean;
+    direction: Direction;
+}
+
 export interface ITank {
     id: string
     name: string
@@ -7,6 +12,9 @@ export interface ITank {
     x: number
     y: number
     direction: Direction
+    bullets: IBullet[]
+    fire: boolean
+    skinUrl: string
 }
 
 export interface ITanks {

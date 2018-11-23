@@ -37,6 +37,10 @@ class SocketService {
                 gameService.registerMovement(id, direction)
             });
 
+            this.socket.on(SOCKET_EVENTS.FIRE, ({id}) => {
+                gameService.fire(id)
+            });
+
             this.socket.on(SOCKET_EVENTS.UPDATE_TANK, (tank: ITank) => {
                 console.log('tank ', tank)
                 gameService.updateTank(tank)
