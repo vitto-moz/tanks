@@ -14,7 +14,8 @@ interface ITanksMovements {
 }
 
 const UPDATING_INTERVAL = 1000
-const MOVE_QUANTUM = 1
+const TANK_MOVE_QUANTUM = 1
+const BULLET_MOVE_QUANTUM = 3
 
 class GameService {
     public gameState: IGameState = GAME_STATE
@@ -70,33 +71,34 @@ class GameService {
         return checkedTanks
     }
 
-    public startFire(tankId: string) {
+    public addBullet(tankId: string) {
         this.gameState.bullets.push({
             tankId,
             x: this.gameState.tanks[tankId].x,
-            y: this.gameState.tanks[tankId].y
+            y: this.gameState.tanks[tankId].y,
+            new: true,
         })
     }
 
     private getMovedBullets(): IBullet[] {
-        const tanksBullets = this.gameState.bullets.map((fire) => {
-            return this.moveFire(fire)
+        const tanksBullets = this.gameState.bullets.map((bullet) => {
+            return bullet.new ? {...bullet, new: false}  : this.moveBullet(bullet) 
         })
         return tanksBullets
     }
 
-    private moveFire(bullet: IBullet): IBullet {
+    private moveBullet(bullet: IBullet): IBullet {
         const direction = this.gameState.tanks[bullet.tankId].direction
         console.log('direction ', direction)
         switch (direction) {
             case DIRECTIONS.UP:
-                return {...bullet, y: bullet.y - MOVE_QUANTUM}
+                return {...bullet, y: bullet.y - BULLET_MOVE_QUANTUM}
             case DIRECTIONS.DOWN:
-                return {...bullet, y: bullet.y + MOVE_QUANTUM}
+                return {...bullet, y: bullet.y + BULLET_MOVE_QUANTUM}
             case DIRECTIONS.LEFT:
-                return {...bullet, x: bullet.x - MOVE_QUANTUM}
+                return {...bullet, x: bullet.x - BULLET_MOVE_QUANTUM}
             case DIRECTIONS.RIGHT:
-                return {...bullet, x: bullet.x + MOVE_QUANTUM}
+                return {...bullet, x: bullet.x + BULLET_MOVE_QUANTUM}
             default: return bullet
         }
     }
@@ -119,16 +121,16 @@ class GameService {
             possibleTank.direction = direction
             switch (direction) {
                 case DIRECTIONS.UP:
-                    possibleTank.y = tanks[id].y - MOVE_QUANTUM
+                    possibleTank.y = tanks[id].y - TANK_MOVE_QUANTUM
                     break
                 case DIRECTIONS.DOWN:
-                    possibleTank.y = tanks[id].y + MOVE_QUANTUM
+                    possibleTank.y = tanks[id].y + TANK_MOVE_QUANTUM
                     break
                 case DIRECTIONS.LEFT:
-                    possibleTank.x = tanks[id].x - MOVE_QUANTUM
+                    possibleTank.x = tanks[id].x - TANK_MOVE_QUANTUM
                     break
                 case DIRECTIONS.RIGHT:
-                    possibleTank.x = tanks[id].x + MOVE_QUANTUM
+                    possibleTank.x = tanks[id].x + TANK_MOVE_QUANTUM
                     break
             }
         }

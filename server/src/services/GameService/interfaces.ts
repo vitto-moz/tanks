@@ -42,6 +42,7 @@ export interface IBullet {
     tankId: string
     x: number
     y: number
+    new: boolean
 }
 
 export interface IEnvironment {

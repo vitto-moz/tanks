@@ -38,7 +38,7 @@ class SocketService {
             });
 
             this.socket.on(SOCKET_EVENTS.FIRE, ({id}) => {
-                gameService.startFire(id)
+                gameService.addBullet(id)
             });
 
             this.socket.on(SOCKET_EVENTS.UPDATE_TANK, (tank: ITank) => {

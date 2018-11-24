@@ -2,7 +2,8 @@ import * as React from "react";
 import styles from './polygonStyles'
 import Tank from '../Tank';
 import {coordsToPixels} from '../../utils/helpers';
-import {IGameState} from '../../services/socketService/interfaces';
+import {IGameState, IBullet} from '../../services/socketService/interfaces';
+import Bullet from '../Tank/Bullet';
 
 interface Props {
     gameState: IGameState
@@ -25,7 +26,12 @@ class Polygon extends React.Component<Props, any> {
             <div style={this.polygonStyles}>
                 {
                     Object.keys(this.props.gameState.tanks).map(id => {
-                        return <Tank key={id} tank={this.props.gameState.tanks[id]}/>
+                        return <Tank key={id} tank={this.props.gameState.tanks[id]} />
+                    })
+                }
+                {
+                    this.props.gameState.bullets.map((bullet: IBullet) => {
+                        return <Bullet key={bullet.tankId} bullet={bullet} />
                     })
                 }
             </div>
