@@ -1,3 +1,4 @@
+import { direction } from './../../../../client/src/components/Tank/index';
 export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
 
 // export interface IBullet {
@@ -39,10 +40,12 @@ export interface IWater {
 }
 
 export interface IBullet {
+    id: string
     tankId: string
     x: number
     y: number
     new: boolean
+    direction: Direction
 }
 
 export interface IEnvironment {

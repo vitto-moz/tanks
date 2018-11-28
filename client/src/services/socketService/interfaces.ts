@@ -22,6 +22,7 @@ export interface ITanks {
 };
 
 export interface IBullet {
+    id: string
     tankId: string
     x: number
     y: number

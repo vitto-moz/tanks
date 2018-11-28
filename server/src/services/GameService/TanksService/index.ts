@@ -1,4 +1,5 @@
 import {ITanks, Direction, Directions, ITank} from '../interfaces';
+import CONSTANTS from '../../../constants';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -10,8 +11,6 @@ export const DIRECTIONS: Directions = {
 interface ITanksMovements {
     [index: string]: Direction
 }
-
-const TANK_MOVE_QUANTUM = 1
 
 class TanksService {
 
@@ -34,16 +33,16 @@ class TanksService {
             } else {
                 switch (direction) {
                     case DIRECTIONS.UP:
-                        possibleTank.y = tanks[id].y - TANK_MOVE_QUANTUM
+                        possibleTank.y = tanks[id].y - CONSTANTS.TANK_MOVE_QUANTUM
                         break
                     case DIRECTIONS.DOWN:
-                        possibleTank.y = tanks[id].y + TANK_MOVE_QUANTUM
+                        possibleTank.y = tanks[id].y + CONSTANTS.TANK_MOVE_QUANTUM
                         break
                     case DIRECTIONS.LEFT:
-                        possibleTank.x = tanks[id].x - TANK_MOVE_QUANTUM
+                        possibleTank.x = tanks[id].x - CONSTANTS.TANK_MOVE_QUANTUM
                         break
                     case DIRECTIONS.RIGHT:
-                        possibleTank.x = tanks[id].x + TANK_MOVE_QUANTUM
+                        possibleTank.x = tanks[id].x + CONSTANTS.TANK_MOVE_QUANTUM
                         break
                 }
             }

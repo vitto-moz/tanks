@@ -72,8 +72,12 @@ class Bullet extends React.PureComponent<Props, State> {
   // }
 
   render() {
+    console.log('this.props.bullet.x ', this.props.bullet.x)
+    console.log('this.props.bullet.y ', this.props.bullet.y)
     return (
-      <div style={{
+      <div 
+        id={this.props.bullet.id}
+        style={{
         ...styles.bullet,
         // ...this.getBulletStyles(),
         transform: `translateX(${coordsToPixels(this.props.bullet.x)}px) translateY(${coordsToPixels(this.props.bullet.y)}px)`,

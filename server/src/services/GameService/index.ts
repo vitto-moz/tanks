@@ -3,6 +3,8 @@ import {ITanks, Direction, Directions, ITank, IGameState, IBullet} from './inter
 import GAME_STATE from './config';
 import tanksService from './TanksService';
 import bulletsService from './BulletsService';
+import obstacleService from './ObstacleService';
+import randomId from '../../utils/randomId';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -24,7 +26,6 @@ class GameService {
 
     constructor() {
         this.changeGameState = this.changeGameState.bind(this)
-        this.getCheckedTanks = this.getCheckedTanks.bind(this)
     }
 
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
@@ -48,9 +49,9 @@ class GameService {
 
     private changeGameState(tanksMovements: ITanksMovements, tanksFires: IBullet[], tanks: ITanks) {
         const possibleTanks = tanksService.getPossibleTanks(tanksMovements, tanks)
-        const checkedTanks = this.getCheckedTanks(possibleTanks, tanks)
+        const checkedTanks = obstacleService.getCheckedTanks(possibleTanks, tanks)
         this.gameState.tanks = checkedTanks
-        this.gameState.bullets = bulletsService.getMovedBullets(this.gameState.bullets, checkedTanks)
+        this.gameState.bullets = bulletsService.getMovedBullets(this.gameState.bullets)
     }
 
     private clean() {
@@ -68,48 +69,15 @@ class GameService {
 
     public addBullet(tankId: string) {
         this.gameState.bullets.push({
+            id: randomId(),
             tankId,
             x: this.gameState.tanks[tankId].x,
             y: this.gameState.tanks[tankId].y,
             new: true,
+            direction: this.gameState.tanks[tankId].direction
         })
     }
 
-    private getCheckedTanks(possibleTanks: ITanks, tanks: ITanks): ITanks {
-        Object.keys(possibleTanks)
-            .map(currentTankId => {
-                return {
-                    id: currentTankId,
-                    obstacles: Object.keys(possibleTanks).map((tankToCheckId) => {
-                        if (tankToCheckId !== currentTankId) {
-                            return possibleTanks[tankToCheckId].x === possibleTanks[currentTankId].x
-                                && possibleTanks[tankToCheckId].y === possibleTanks[currentTankId].y
-                        } else {
-                            return null
-                        }
-                    }).filter(tankObstacle => tankObstacle !== null)
-                }
-            })
-            .map((tankObstacle) => {
-                // if no obstacles we set false
-                return {
-                    id: tankObstacle.id,
-                    obstacle: tankObstacle.obstacles.length !== 0
-                        ? tankObstacle.obstacles.reduce((aggregatedObstacle, obstacle) => aggregatedObstacle || obstacle)
-                        : false
-                }
-            })
-            .map(tankObstacle => {
-                if (tankObstacle.obstacle) {
-                    possibleTanks[tankObstacle.id] = {
-                        ...tanks[tankObstacle.id],
-                        direction: possibleTanks[tankObstacle.id].direction
-                    }
-                }
-            })
-
-        return possibleTanks
-    }
 
 }
 

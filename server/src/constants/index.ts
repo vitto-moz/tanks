@@ -1,0 +1,6 @@
+const CONSTANTS = {
+    TANK_MOVE_QUANTUM: 1,
+    BULLET_MOVE_QUANTUM: 3
+}
+
+export default CONSTANTS

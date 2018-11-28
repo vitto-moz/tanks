@@ -1,4 +1,5 @@
 import {ITanks, Directions, ITank, IBullet} from '../interfaces';
+import CONSTANTS from '../../../constants';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -8,34 +9,34 @@ export const DIRECTIONS: Directions = {
 }
 
 
-const BULLET_MOVE_QUANTUM = 3
-
-
 class BulletsService {
 
     constructor() {
     }
 
-    public getMovedBullets(bullets: IBullet[], tansk: ITanks): IBullet[] {
+    public getMovedBullets(bullets: IBullet[]): IBullet[] {
         const tanksBullets = bullets.map((bullet) => {
-            return bullet.new ? {...bullet, new: false} : this.moveBullet(bullet, tansk[bullet.tankId])
+            return bullet.new 
+                ? {...bullet, new: false} 
+                : this.moveBullet(bullet)
+            // return this.moveBullet(bullet)
         })
         return tanksBullets
     }
 
 
-    private moveBullet(bullet: IBullet, tank: ITank): IBullet {
-        const direction = tank.direction
-        console.log('direction ', direction)
-        switch (direction) {
+    private moveBullet(bullet: IBullet): IBullet {
+        const moveQuantum = bullet.new
+            ? CONSTANTS.TANK_MOVE_QUANTUM : CONSTANTS.BULLET_MOVE_QUANTUM
+        switch (bullet.direction) {
             case DIRECTIONS.UP:
-                return {...bullet, y: bullet.y - BULLET_MOVE_QUANTUM}
+                return {...bullet, y: bullet.y - moveQuantum}
             case DIRECTIONS.DOWN:
-                return {...bullet, y: bullet.y + BULLET_MOVE_QUANTUM}
+                return {...bullet, y: bullet.y + moveQuantum}
             case DIRECTIONS.LEFT:
-                return {...bullet, x: bullet.x - BULLET_MOVE_QUANTUM}
+                return {...bullet, x: bullet.x - moveQuantum}
             case DIRECTIONS.RIGHT:
-                return {...bullet, x: bullet.x + BULLET_MOVE_QUANTUM}
+                return {...bullet, x: bullet.x + moveQuantum}
             default: return bullet
         }
     }
