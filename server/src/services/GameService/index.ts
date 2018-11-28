@@ -1,6 +1,7 @@
 import {Tank} from './tank.model';
 import {ITanks, Direction, Directions, ITank, IGameState, IBullet} from './interfaces';
 import GAME_STATE from './config';
+import tanksService from './TanksService';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -14,7 +15,6 @@ interface ITanksMovements {
 }
 
 const UPDATING_INTERVAL = 1000
-const TANK_MOVE_QUANTUM = 1
 const BULLET_MOVE_QUANTUM = 3
 
 class GameService {
@@ -23,14 +23,14 @@ class GameService {
     public tanksBullets: IBullet[] = []
 
     constructor() {
-        this.moveTanks = this.moveTanks.bind(this)
+        this.changeGameState = this.changeGameState.bind(this)
         this.getCheckedTanks = this.getCheckedTanks.bind(this)
     }
 
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
         // emitUpdate - is a socket io event to update polygon 
         setInterval(() => {
-            this.moveTanks(this.tanksMovements, this.tanksBullets, this.gameState.tanks)
+            this.changeGameState(this.tanksMovements, this.tanksBullets, this.gameState.tanks)
             emitUpdate(this.gameState)
             this.clean()
         }, UPDATING_INTERVAL
@@ -46,8 +46,8 @@ class GameService {
         this.gameState.tanks[tank.id] = tank
     }
 
-    private moveTanks(tanksMovements: ITanksMovements, tanksFires: IBullet[], tanks: ITanks) {
-        const possibleTanks = this.getPossibleTanks(tanksMovements, tanks)
+    private changeGameState(tanksMovements: ITanksMovements, tanksFires: IBullet[], tanks: ITanks) {
+        const possibleTanks = tanksService.getPossibleTanks(tanksMovements, tanks)
         const checkedTanks = this.getCheckedTanks(possibleTanks, tanks)
         const tanksWithFires = this.getTanksWithFire(checkedTanks, tanksFires)
         // console.log('tanksWithFires ', tanksWithFires)
@@ -61,6 +61,11 @@ class GameService {
         Object.keys(this.gameState.tanks).map((tankId: string) => {
             return this.gameState.tanks[tankId].fire = false
         })
+    }
+
+
+    public registerMovement(id: string, direction: Direction) {
+        this.tanksMovements[id] = direction
     }
 
     private getTanksWithFire(checkedTanks: ITanks, tanksFire: IBullet[]): ITanks {
@@ -101,43 +106,6 @@ class GameService {
                 return {...bullet, x: bullet.x + BULLET_MOVE_QUANTUM}
             default: return bullet
         }
-    }
-
-    private getPossibleTanks(tanksMovements: ITanksMovements, tanks: ITanks): ITanks {
-        const possibleTanks: ITanks = {}
-        Object.keys(tanksMovements).map(id => {
-            possibleTanks[id] = this.getPossibleTankPosition(id, tanksMovements[id], tanks)
-        })
-        return {...tanks, ...possibleTanks}
-    }
-
-    public registerMovement(id: string, direction: Direction) {
-        this.tanksMovements[id] = direction
-    }
-
-    public getPossibleTankPosition(id: string, direction: Direction, tanks: ITanks): ITank {
-        const possibleTank: ITank = {...tanks[id]}
-        if (tanks[id]) {
-            if (tanks[id].direction !== direction) {
-                possibleTank.direction = direction
-            } else {
-                switch (direction) {
-                    case DIRECTIONS.UP:
-                        possibleTank.y = tanks[id].y - TANK_MOVE_QUANTUM
-                        break
-                    case DIRECTIONS.DOWN:
-                        possibleTank.y = tanks[id].y + TANK_MOVE_QUANTUM
-                        break
-                    case DIRECTIONS.LEFT:
-                        possibleTank.x = tanks[id].x - TANK_MOVE_QUANTUM
-                        break
-                    case DIRECTIONS.RIGHT:
-                        possibleTank.x = tanks[id].x + TANK_MOVE_QUANTUM
-                        break
-                }
-            }
-        }
-        return possibleTank
     }
 
     private getCheckedTanks(possibleTanks: ITanks, tanks: ITanks): ITanks {
