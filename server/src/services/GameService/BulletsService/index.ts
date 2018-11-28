@@ -46,7 +46,7 @@ class BulletsService {
         }
     }
 
-
+    
 }
 
 const bulletsService = new BulletsService()
