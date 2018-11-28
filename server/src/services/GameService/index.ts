@@ -60,6 +60,9 @@ class GameService {
                 this.gameState.bullets,
                 newTanksBullets
             )
+        const objectsToIntersect = Object.values(checkedTanks)
+        const bulletsCollisions = bulletsService.getBulletsCollisions(objectsToIntersect, this.gameState.bullets)
+        console.log('bulletsCollisions ', bulletsCollisions)
     }
 
     private clean() {

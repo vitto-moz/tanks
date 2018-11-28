@@ -9,6 +9,25 @@ export const DIRECTIONS: Directions = {
     RIGHT: 'RIGHT',
 }
 
+interface ICollision {
+    bulletId: string
+    objectId: string
+    x: number
+    y: number
+    active: boolean
+}
+
+export interface IBulletHitPoint {
+    x: number
+    y: number
+}
+
+export interface IObjectToIntersect {
+    id: string
+    x: number
+    y: number
+}
+
 
 class BulletsService {
 
@@ -17,8 +36,6 @@ class BulletsService {
 
     public getMovedBullets(bullets: IBullet[], newTanksBullets: ITanksBullets): IBullet[] {
         const aNewTanksBullets = Object.values(newTanksBullets)
-        console.log('newTanksBullets ', newTanksBullets)
-        console.log('bullets ', bullets)
         const tanksBullets = [...bullets, ...aNewTanksBullets]
             .map((bullet) => {
                 return bullet.new
@@ -46,7 +63,59 @@ class BulletsService {
         }
     }
 
-    
+    public getBulletsCollisions(
+        objectsToIntersect: IObjectToIntersect[],
+        bullets: IBullet[]
+    ): ICollision[] {
+        return bullets
+            .map((bullet: IBullet) => {
+                return this.getBulletCollisions(bullet, objectsToIntersect)
+            })
+            .reduce((acc, val) => acc.concat(val), [])
+            .filter((collision: ICollision) => {
+                const bullet = bullets.filter(bullet => bullet.id === collision.bulletId)[0]
+                return collision.objectId !== bullet.tankId
+            })
+
+    }
+
+    private getBulletCollisions(bullet: IBullet, objectsToIntersect: IObjectToIntersect[]): ICollision[] {
+        return objectsToIntersect.map((object: IObjectToIntersect): ICollision[] => {
+            return this.getBulletHitLine(bullet)
+                .map((bulletHitPoint: IBulletHitPoint): ICollision => {
+                    return {
+                        bulletId: bullet.id,
+                        objectId: object.id,
+                        x: bulletHitPoint.x,
+                        y: bulletHitPoint.y,
+                        active: bulletHitPoint.x === object.x && bulletHitPoint.y === object.y
+                    }
+                }).filter((collision: ICollision) => collision.active)
+        }).reduce((acc, val) => acc.concat(val), [])
+    }
+
+    private getBulletHitLine(bullet: IBullet): IBulletHitPoint[] {
+        let bulletHitLine: IBulletHitPoint[] = []
+        for (let i = 0;i < 3;i++) {
+            bulletHitLine.push(this.getBulletHitPoint(bullet, i))
+        }
+        return bulletHitLine
+    }
+
+    private getBulletHitPoint(bullet: IBullet, step: number): IBulletHitPoint {
+        switch (bullet.direction) {
+            case DIRECTIONS.UP:
+                return {x: bullet.x, y: bullet.y - step}
+            case DIRECTIONS.DOWN:
+                return {x: bullet.x, y: bullet.y + step}
+            case DIRECTIONS.LEFT:
+                return {x: bullet.x - step, y: bullet.y}
+            case DIRECTIONS.RIGHT:
+                return {x: bullet.x + step, y: bullet.y}
+            default: return {x: bullet.x, y: bullet.y}
+        }
+    }
+
 }
 
 const bulletsService = new BulletsService()

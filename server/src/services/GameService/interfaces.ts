@@ -47,6 +47,10 @@ export interface IBullet {
     direction: Direction
 }
 
+export interface IBullets {
+    [index: string]: IBullet
+}
+
 export interface IEnvironment {
     walls: {[index: string]: IWall}
     water: {[index: string]: IWater}
