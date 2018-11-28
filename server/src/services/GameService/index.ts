@@ -2,6 +2,7 @@ import {Tank} from './tank.model';
 import {ITanks, Direction, Directions, ITank, IGameState, IBullet} from './interfaces';
 import GAME_STATE from './config';
 import tanksService from './TanksService';
+import bulletsService from './BulletsService';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -15,7 +16,6 @@ interface ITanksMovements {
 }
 
 const UPDATING_INTERVAL = 1000
-const BULLET_MOVE_QUANTUM = 3
 
 class GameService {
     public gameState: IGameState = GAME_STATE
@@ -49,10 +49,8 @@ class GameService {
     private changeGameState(tanksMovements: ITanksMovements, tanksFires: IBullet[], tanks: ITanks) {
         const possibleTanks = tanksService.getPossibleTanks(tanksMovements, tanks)
         const checkedTanks = this.getCheckedTanks(possibleTanks, tanks)
-        const tanksWithFires = this.getTanksWithFire(checkedTanks, tanksFires)
-        // console.log('tanksWithFires ', tanksWithFires)
-        this.gameState.tanks = tanksWithFires
-        this.gameState.bullets = this.getMovedBullets()
+        this.gameState.tanks = checkedTanks
+        this.gameState.bullets = bulletsService.getMovedBullets(this.gameState.bullets, checkedTanks)
     }
 
     private clean() {
@@ -68,14 +66,6 @@ class GameService {
         this.tanksMovements[id] = direction
     }
 
-    private getTanksWithFire(checkedTanks: ITanks, tanksFire: IBullet[]): ITanks {
-        tanksFire.map(fire => {
-            checkedTanks[fire.tankId].fire = true
-        })
-        // console.log('checkedTanks ', checkedTanks)
-        return checkedTanks
-    }
-
     public addBullet(tankId: string) {
         this.gameState.bullets.push({
             tankId,
@@ -83,29 +73,6 @@ class GameService {
             y: this.gameState.tanks[tankId].y,
             new: true,
         })
-    }
-
-    private getMovedBullets(): IBullet[] {
-        const tanksBullets = this.gameState.bullets.map((bullet) => {
-            return bullet.new ? {...bullet, new: false} : this.moveBullet(bullet)
-        })
-        return tanksBullets
-    }
-
-    private moveBullet(bullet: IBullet): IBullet {
-        const direction = this.gameState.tanks[bullet.tankId].direction
-        console.log('direction ', direction)
-        switch (direction) {
-            case DIRECTIONS.UP:
-                return {...bullet, y: bullet.y - BULLET_MOVE_QUANTUM}
-            case DIRECTIONS.DOWN:
-                return {...bullet, y: bullet.y + BULLET_MOVE_QUANTUM}
-            case DIRECTIONS.LEFT:
-                return {...bullet, x: bullet.x - BULLET_MOVE_QUANTUM}
-            case DIRECTIONS.RIGHT:
-                return {...bullet, x: bullet.x + BULLET_MOVE_QUANTUM}
-            default: return bullet
-        }
     }
 
     private getCheckedTanks(possibleTanks: ITanks, tanks: ITanks): ITanks {
