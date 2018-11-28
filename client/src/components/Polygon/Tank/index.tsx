@@ -1,9 +1,7 @@
 import * as React from "react";
 import styles from './tankStyles'
-import Trunk from './Trunk';
-import Bullet from './Bullet';
-import {ITank, IBullet, Direction} from '../../services/socketService/interfaces';
-import {coordsToPixels} from "../../utils/helpers";
+import {IBullet, ITank, Direction} from '../../../services/socketService/interfaces';
+import {coordsToPixels} from '../../../utils/helpers';
 
 export type direction = 'LEFT' | 'RIGHT' | 'UP' | 'DOWN' | 'SPACE'
 

@@ -1,9 +1,9 @@
 import * as React from "react";
 import styles from './polygonStyles'
-import Tank from '../Tank';
 import {coordsToPixels} from '../../utils/helpers';
 import {IGameState, IBullet} from '../../services/socketService/interfaces';
-import Bullet from '../Tank/Bullet';
+import Tank from './Tank';
+import Bullet from './Bullet';
 
 interface Props {
     gameState: IGameState

@@ -1,4 +1,3 @@
-import { direction } from './../../../../client/src/components/Tank/index';
 export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
 
 // export interface IBullet {
