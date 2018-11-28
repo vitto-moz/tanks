@@ -10,7 +10,7 @@ interface Props {
 }
 
 interface State {
-  fire: boolean
+  visible: boolean
 }
 
 class Bullet extends React.PureComponent<Props, State> {
@@ -18,71 +18,28 @@ class Bullet extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      fire: false,
+      visible: false,
     }
   }
 
-  // private getBulletStyles() {
-  //   if (this.state.fire) {
-  //     return this.getBulletOnFireStyles()
-  //   }
-  // }
+  public componentDidMount() {
+    setTimeout(() => {
+      this.setState({visible: true})
+    }, 1200)
+  }
 
-  // public componentDidMount() {
-  //   setTimeout(() => {
-  //     this.setState({fire: true}, () => {
-  //       this.onFinish()
-  //     })
-  //   }, 0)
-
-  // }
-
-  // private onFinish() {
-  //   setTimeout(() => this.props.onFinish(this.props.index), 2000)
-  // }
-
-  // private getBulletOnFireStyles() {
-  //   // console.log('this.props.direction ', this.props.direction)
-  //   switch (this.props.direction) {
-  //     case 'UP':
-  //       return {
-  //         transform: `rotate(${90}deg)`,
-  //         top: '-2000px',
-  //         left: '27px'
-  //       }
-  //     case 'DOWN':
-  //       return {
-  //         transform: `rotate(${90}deg)`,
-  //         top: '2000px',
-  //         left: '25px',
-  //       }
-  //     case 'LEFT':
-  //       return {
-  //         transform: `rotate(${0}deg)`,
-  //         left: '-2000px',
-  //         top: '45px'
-  //       }
-  //     case 'RIGHT':
-  //       return {
-  //         transform: `rotate(${0}deg)`,
-  //         left: '2000px',
-  //         top: '45px'
-  //       }
-  //   }
-  // }
 
   render() {
-    console.log('this.props.bullet.x ', this.props.bullet.x)
-    console.log('this.props.bullet.y ', this.props.bullet.y)
+    console.log('this.state.visible ', this.state.visible)
     return (
-      <div 
-        id={this.props.bullet.id}
+      <div
         style={{
-        ...styles.bullet,
-        // ...this.getBulletStyles(),
-        transform: `translateX(${coordsToPixels(this.props.bullet.x)}px) translateY(${coordsToPixels(this.props.bullet.y)}px)`,
-        transition: '1s linear'
-      }} />
+          ...styles.bullet,
+          // ...this.getBulletStyles(),
+          transform: `translateX(${coordsToPixels(this.props.bullet.x)}px) translateY(${coordsToPixels(this.props.bullet.y)}px)`,
+          transition: '1s linear',
+          opacity: this.state.visible ? 1 : 0
+        }} />
     );
   }
 

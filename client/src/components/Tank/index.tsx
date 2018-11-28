@@ -102,10 +102,10 @@ class Tank extends React.PureComponent<Props, State> {
             if (rotateDeg > 180) rotateDeg = rotateDeg - 360;
             if (rotateDeg < -180) rotateDeg = rotateDeg + 360;
 
-            console.log(props.tank.direction);
-            console.log('state:' + this.state.deg);
-            console.log('target:' + targetDeg);
-            console.log('rotate:' + rotateDeg);
+            // console.log(props.tank.direction);
+            // console.log('state:' + this.state.deg);
+            // console.log('target:' + targetDeg);
+            // console.log('rotate:' + rotateDeg);
 
             if (rotateDeg !== 0) {
                 this.setState({

@@ -42,7 +42,6 @@ class SocketService {
             });
 
             this.socket.on(SOCKET_EVENTS.UPDATE_TANK, (tank: ITank) => {
-                console.log('tank ', tank)
                 gameService.updateTank(tank)
             });
 

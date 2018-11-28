@@ -21,7 +21,6 @@ class Polygon extends React.Component<Props, any> {
     }
 
     render() {
-
         return (
             <div style={this.polygonStyles}>
                 {
@@ -31,7 +30,7 @@ class Polygon extends React.Component<Props, any> {
                 }
                 {
                     this.props.gameState.bullets.map((bullet: IBullet) => {
-                        return <Bullet key={bullet.tankId} bullet={bullet} />
+                        return <Bullet key={bullet.id} bullet={bullet} />
                     })
                 }
             </div>

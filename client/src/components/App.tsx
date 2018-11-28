@@ -15,7 +15,6 @@ class App extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         socketService.onUpdate((gameState: IGameState) => {
-            console.log(gameState.bullets[0]);
             this.setState({gameState});
         });
     }

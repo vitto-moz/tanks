@@ -15,12 +15,14 @@ class BulletsService {
     }
 
     public getMovedBullets(bullets: IBullet[]): IBullet[] {
-        const tanksBullets = bullets.map((bullet) => {
-            return bullet.new 
-                ? {...bullet, new: false} 
-                : this.moveBullet(bullet)
-            // return this.moveBullet(bullet)
-        })
+
+        const tanksBullets = bullets
+            .map((bullet) => {
+                return bullet.new
+                    ? {...bullet, new: false}
+                    : {...this.moveBullet(bullet)}
+                // return this.moveBullet(bullet)
+            })
         return tanksBullets
     }
 
