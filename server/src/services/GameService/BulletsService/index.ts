@@ -1,28 +1,13 @@
-import {ITanksBullets} from './../index';
-import {ITanks, Directions, ITank, IBullet} from '../interfaces';
+import {ITanksBullets, DIRECTIONS} from './../index';
+import {IBullet, ICollision} from '../interfaces';
 import CONSTANTS from '../../../constants';
 
-export const DIRECTIONS: Directions = {
-    UP: 'UP',
-    DOWN: 'DOWN',
-    LEFT: 'LEFT',
-    RIGHT: 'RIGHT',
-}
-
-interface ICollision {
-    bulletId: string
-    objectId: string
-    x: number
-    y: number
-    active: boolean
-}
-
-export interface IBulletHitPoint {
+interface IBulletHitPoint {
     x: number
     y: number
 }
 
-export interface IObjectToIntersect {
+interface IObjectToIntersect {
     id: string
     x: number
     y: number

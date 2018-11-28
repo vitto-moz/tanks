@@ -38,11 +38,22 @@ export interface IEnvironment {
     y: number
 }
 
+
+export interface ICollision {
+    bulletId: string
+    objectId: string
+    x: number
+    y: number
+    active: boolean
+}
+
+
 export interface IGameState {
     tanks: ITanks
     environment: IEnvironment
     config: IConfig
     bullets: IBullet[]
+    collisions: ICollision[]
 }
 
 export type Directions = {[k in Direction]: Direction};

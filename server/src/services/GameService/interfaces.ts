@@ -56,10 +56,19 @@ export interface IEnvironment {
     water: {[index: string]: IWater}
 }
 
+export interface ICollision {
+    bulletId: string
+    objectId: string
+    x: number
+    y: number
+    active: boolean
+}
+
 export interface IGameState {
     tanks: ITanks
     environment: IEnvironment
     config: IConfig
+    collisions: ICollision[]
     bullets: IBullet[]
 }
 
