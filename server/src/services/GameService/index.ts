@@ -1,5 +1,5 @@
 import {Tank} from './tank.model';
-import {ITanks, Direction, Directions, ITank, IGameState, IBullet} from './interfaces';
+import {ITanks, Direction, Directions, ITank, IGameState, IBullet, ICollision} from './interfaces';
 import GAME_STATE from './config';
 import tanksService from './TanksService';
 import bulletsService from './BulletsService';
@@ -55,7 +55,7 @@ class GameService {
         const possibleTanks = tanksService.getPossibleTanks(tanksMovements, tanks)
         const checkedTanks = obstacleService.getCheckedTanks(possibleTanks, tanks)
         this.gameState.tanks = checkedTanks
-        this.gameState.bullets =
+        const movedBullets =
             bulletsService.getMovedBullets(
                 this.gameState.bullets,
                 newTanksBullets
@@ -63,8 +63,15 @@ class GameService {
         const objectsToIntersect = Object.values(checkedTanks)
         this.gameState.collisions = [
             ...this.gameState.collisions,
-            ...bulletsService.getBulletsCollisions(objectsToIntersect, this.gameState.bullets)
+            ...bulletsService.getBulletsCollisions(objectsToIntersect, movedBullets)
         ]
+
+        this.gameState.bullets = movedBullets
+        // .filter((bullet: IBullet): boolean => {
+        //     return this.gameState.collisions.map((collision: ICollision) => {
+        //         return bullet.id === collision.bulletId
+        //     }).reduce((acc, value) => acc || value, false)
+        // })
     }
 
     private clean() {

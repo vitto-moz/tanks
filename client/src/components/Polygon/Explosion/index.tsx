@@ -1,12 +1,13 @@
 import * as React from "react";
 import styles from './explosionStyles'
-import {IBullet, ICollision} from '../../../services/socketService/interfaces';
+import {ICollision} from '../../../services/socketService/interfaces';
 import {coordsToPixels} from '../../../utils/helpers';
 
 
 
 interface Props {
-  collision: ICollision
+  collision: ICollision,
+  onExplosion: (collision: ICollision) => void
 }
 
 interface State {
@@ -25,7 +26,12 @@ class Explosion extends React.PureComponent<Props, State> {
   public componentDidMount() {
     setTimeout(() => {
       this.setState({visible: true})
-    }, 1200)
+      this.props.onExplosion(this.props.collision)
+    }, 1500)
+    setTimeout(() => {
+      
+      this.setState({visible: false})
+    }, 2000)
   }
 
   render() {

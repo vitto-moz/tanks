@@ -10,15 +10,48 @@ interface Props {
     gameState: IGameState
 };
 
-class Polygon extends React.Component<Props, any> {
+interface State {
+    explodedBulletsIds: string[]
+};
+
+class Polygon extends React.Component<Props, State> {
 
     private polygonStyles: any;
+
+    constructor(props: Props) {
+        super(props)
+        this.onExplosion = this.onExplosion.bind(this)
+        this.state = {
+            explodedBulletsIds: []
+        }
+    }
 
     componentDidMount() {
 
         this.polygonStyles = Object.assign({}, styles.polygon);
         this.polygonStyles.width = coordsToPixels(this.props.gameState.config.x);
         this.polygonStyles.height = coordsToPixels(this.props.gameState.config.y);
+    }
+
+    private onExplosion(collision: ICollision) {
+        this.setState(prevState => {
+            return {
+                explodedBulletsIds: [
+                    ...prevState.explodedBulletsIds,
+                    collision.bulletId
+                ]
+            }
+        })
+    }
+
+    private getBullets() {
+        return this.props.gameState.bullets
+            .filter((bullet: IBullet) => {
+                return this.state.explodedBulletsIds.indexOf(bullet.id) === -1
+            })
+            .map((bullet: IBullet) => {
+                return <Bullet key={bullet.id} bullet={bullet} />
+            })
     }
 
     render() {
@@ -29,14 +62,14 @@ class Polygon extends React.Component<Props, any> {
                         return <Tank key={id} tank={this.props.gameState.tanks[id]} />
                     })
                 }
-                {
-                    this.props.gameState.bullets.map((bullet: IBullet) => {
-                        return <Bullet key={bullet.id} bullet={bullet} />
-                    })
-                }
+                {this.getBullets()}
                 {
                     this.props.gameState.collisions.map((collision: ICollision) => {
-                        return <Explosion key={collision.bulletId} collision={collision} />
+                        return <Explosion
+                            key={collision.bulletId}
+                            onExplosion={this.onExplosion}
+                            collision={collision}
+                        />
                     })
                 }
             </div>
