@@ -159,18 +159,6 @@ class Tank extends React.PureComponent<Props, State> {
                 backgroundImage: `url(${this.props.tank.skinUrl})`,
                 ...this.getTankStyles()
             }}>
-                {/*<Trunk direction={this.props.tank.direction} />*/}
-                {this.state.bullets.map((bullet, index) => {
-                    return bullet.onFly
-                        ? <Bullet
-                            key={index}
-                            index={index}
-                            direction={bullet.direction}
-                            onFly={bullet.onFly}
-                            onFinish={this.onFireFinish}
-                        />
-                        : null
-                })} */}
             </div>
         );
     }

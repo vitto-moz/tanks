@@ -82,7 +82,7 @@ class GameService {
 
     private getMovedBullets(): IBullet[] {
         const tanksBullets = this.gameState.bullets.map((bullet) => {
-            return bullet.new ? {...bullet, new: false}  : this.moveBullet(bullet) 
+            return bullet.new ? {...bullet, new: false} : this.moveBullet(bullet)
         })
         return tanksBullets
     }
@@ -118,20 +118,23 @@ class GameService {
     public getPossibleTankPosition(id: string, direction: Direction, tanks: ITanks): ITank {
         const possibleTank: ITank = {...tanks[id]}
         if (tanks[id]) {
-            possibleTank.direction = direction
-            switch (direction) {
-                case DIRECTIONS.UP:
-                    possibleTank.y = tanks[id].y - TANK_MOVE_QUANTUM
-                    break
-                case DIRECTIONS.DOWN:
-                    possibleTank.y = tanks[id].y + TANK_MOVE_QUANTUM
-                    break
-                case DIRECTIONS.LEFT:
-                    possibleTank.x = tanks[id].x - TANK_MOVE_QUANTUM
-                    break
-                case DIRECTIONS.RIGHT:
-                    possibleTank.x = tanks[id].x + TANK_MOVE_QUANTUM
-                    break
+            if (tanks[id].direction !== direction) {
+                possibleTank.direction = direction
+            } else {
+                switch (direction) {
+                    case DIRECTIONS.UP:
+                        possibleTank.y = tanks[id].y - TANK_MOVE_QUANTUM
+                        break
+                    case DIRECTIONS.DOWN:
+                        possibleTank.y = tanks[id].y + TANK_MOVE_QUANTUM
+                        break
+                    case DIRECTIONS.LEFT:
+                        possibleTank.x = tanks[id].x - TANK_MOVE_QUANTUM
+                        break
+                    case DIRECTIONS.RIGHT:
+                        possibleTank.x = tanks[id].x + TANK_MOVE_QUANTUM
+                        break
+                }
             }
         }
         return possibleTank
