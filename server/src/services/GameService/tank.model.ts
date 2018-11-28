@@ -19,7 +19,7 @@ export class Tank implements ITank {
         this.y = 0
         this.direction = 'UP'
         this.fire = false
-        this.skinUrl = 'https://www.clipartmax.com/png/middle/77-775699_cartoon-tank-t-34-top-view-png-clipart-tank-top-view-vector.png'
+        this.skinUrl = 'https://opengameart.org/sites/default/files/preview_344.png'
         this.bullets = []
     }
 }

@@ -1,7 +1,8 @@
 const styles: any = {
     tank: {
         position: 'absolute',
-        backgroundColor: 'white',
+        transformOrigin: 'center',
+        backgroundColor: 'transparent',
         width: '100px',
         height: '100px',
         zIndex: 1

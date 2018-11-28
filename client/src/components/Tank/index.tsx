@@ -44,6 +44,7 @@ interface Props {
 interface State {
     top: number
     left: number
+    deg: number
     direction: direction
     fire: boolean
     bullets: IBullet[]
@@ -56,6 +57,7 @@ class Tank extends React.PureComponent<Props, State> {
     state: State = {
         top: 0,
         left: 0,
+        deg: 0,
         direction: 'DOWN',
         fire: false,
         bullets: []
@@ -75,6 +77,41 @@ class Tank extends React.PureComponent<Props, State> {
     componentWillReceiveProps(props: Props) {
         if (props.tank.fire) {
             this.onFire(props.tank.direction)
+        }
+
+        if (props.tank.direction) {
+            let targetDeg = 0;
+
+            switch (props.tank.direction) {
+                case 'UP':
+                    targetDeg = 0;
+                    break;
+                case 'DOWN':
+                    targetDeg = -180;
+                    break;
+                case 'LEFT':
+                    targetDeg = -90;
+                    break;
+                case 'RIGHT':
+                    targetDeg = 90;
+                    break;
+            }
+
+            let rotateDeg = targetDeg - this.state.deg;
+
+            if (rotateDeg > 180) rotateDeg = rotateDeg - 360;
+            if (rotateDeg < -180) rotateDeg = rotateDeg + 360;
+
+            console.log(props.tank.direction);
+            console.log('state:' + this.state.deg);
+            console.log('target:' + targetDeg);
+            console.log('rotate:' + rotateDeg);
+
+            if (rotateDeg !== 0) {
+                this.setState({
+                    deg: this.state.deg + rotateDeg
+                });
+            }
         }
     }
 
@@ -106,23 +143,8 @@ class Tank extends React.PureComponent<Props, State> {
     }
 
     private getTankStyles() {
-        switch (this.props.tank.direction) {
-            case 'UP':
-                return {
-                    transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${0}deg)`
-                }
-            case 'DOWN':
-                return {
-                    transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${180}deg)`
-                }
-            case 'LEFT':
-                return {
-                    transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${-90}deg)`
-                }
-            case 'RIGHT':
-                return {
-                    transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${90}deg)`
-                }
+        return {
+            transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${this.state.deg}deg)`
         }
     }
 
