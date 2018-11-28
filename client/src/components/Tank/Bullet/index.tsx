@@ -30,7 +30,6 @@ class Bullet extends React.PureComponent<Props, State> {
 
 
   render() {
-    console.log('this.state.visible ', this.state.visible)
     return (
       <div
         style={{

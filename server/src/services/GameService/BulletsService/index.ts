@@ -1,3 +1,4 @@
+import {ITanksBullets} from './../index';
 import {ITanks, Directions, ITank, IBullet} from '../interfaces';
 import CONSTANTS from '../../../constants';
 
@@ -14,9 +15,11 @@ class BulletsService {
     constructor() {
     }
 
-    public getMovedBullets(bullets: IBullet[]): IBullet[] {
-
-        const tanksBullets = bullets
+    public getMovedBullets(bullets: IBullet[], newTanksBullets: ITanksBullets): IBullet[] {
+        const aNewTanksBullets = Object.values(newTanksBullets)
+        console.log('newTanksBullets ', newTanksBullets)
+        console.log('bullets ', bullets)
+        const tanksBullets = [...bullets, ...aNewTanksBullets]
             .map((bullet) => {
                 return bullet.new
                     ? {...bullet, new: false}
