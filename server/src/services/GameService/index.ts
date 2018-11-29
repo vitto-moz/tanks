@@ -1,10 +1,12 @@
 import {Tank} from './tank.model';
-import {ITanks, Direction, Directions, ITank, IGameState, IBullet, ICollision} from './interfaces';
+import {ITanks, Direction, Directions, ITank, IGameState, IBullet, ICollision, IEnvironment} from './interfaces';
 import GAME_STATE from './config';
 import tanksService from './TanksService';
 import bulletsService from './BulletsService';
 import obstacleService from './ObstacleService';
 import randomId from '../../utils/randomId';
+import mapBuilder from './MapBuilder';
+import map from './Map';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -30,6 +32,7 @@ class GameService {
 
     constructor() {
         this.changeGameState = this.changeGameState.bind(this)
+        this.gameState.environment = mapBuilder.getMapEnvironment(map)
     }
 
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {

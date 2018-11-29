@@ -26,13 +26,20 @@ export interface IConfig {
     y: number
 }
 
-export interface IWall {
+export type EnvironmentElementsType = 'w' | 'e' | 'b'
+export type EnvironmentElement = IBrick | IWater
+
+export interface IBrick {
+    id: string
+    type: EnvironmentElementsType
     x: number
     y: number
     hp: number
 }
 
 export interface IWater {
+    id: string
+    type: EnvironmentElementsType
     x: number
     y: number
     hp: number
@@ -52,7 +59,7 @@ export interface IBullets {
 }
 
 export interface IEnvironment {
-    walls: {[index: string]: IWall}
+    bricks: {[index: string]: IBrick}
     water: {[index: string]: IWater}
 }
 
