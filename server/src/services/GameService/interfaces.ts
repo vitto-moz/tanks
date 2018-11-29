@@ -62,6 +62,7 @@ export interface ICollision {
     x: number
     y: number
     active: boolean
+    done: boolean
 }
 
 export interface IGameState {

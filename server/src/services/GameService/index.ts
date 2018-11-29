@@ -74,7 +74,7 @@ class GameService {
         tanks: ITanks
     ) {
 
-        this.gameState.tanks = tanksMovements
+        const movedTanks = tanksMovements
             ? this.getUpdatedTanks(tanksMovements, tanks) : this.gameState.tanks
 
         const movedBullets =
@@ -82,15 +82,17 @@ class GameService {
                 this.gameState.bullets,
                 newTanksBullets
             )
-        // console.log('movedBullets ', movedBullets)
-        const objectsToIntersect = Object.values(this.gameState.tanks)
-        this.gameState.collisions = [
-            ...this.gameState.collisions,
+
+        const objectsToIntersect = Object.values(movedTanks)
+        const collisions = [
+            ...this.gameState.collisions.map((collision: ICollision) => ({...collision, done: true})),
             ...bulletsService.getBulletsCollisions(objectsToIntersect, movedBullets)
         ]
 
-        
-        this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, this.gameState.collisions)
+        this.gameState.tanks = tanksService.getInjuredTanks(movedTanks, collisions)
+        this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, collisions)
+        this.gameState.collisions = collisions
+        console.log('this.gameState.tanks ', this.gameState.tanks)
         // .filter((bullet: IBullet): boolean => {
         //     return this.gameState.collisions.map((collision: ICollision) => {
         //         return bullet.id === collision.bulletId
