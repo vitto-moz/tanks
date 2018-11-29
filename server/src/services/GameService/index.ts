@@ -91,7 +91,6 @@ class GameService {
 
         
         this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, this.gameState.collisions)
-        console.log('this.gameState.bullets ', this.gameState.bullets)
         // .filter((bullet: IBullet): boolean => {
         //     return this.gameState.collisions.map((collision: ICollision) => {
         //         return bullet.id === collision.bulletId
