@@ -13,7 +13,7 @@ const styles = {
     backgroundColor: 'green',
     height: '10px',
     zIndex: 6,
-    transition: 'all 0.5s 1s linear',
+    transition: 'all 0.5s 0.5s linear',
   }
 } as React.CSSProperties 
 
