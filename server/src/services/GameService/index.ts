@@ -92,7 +92,7 @@ class GameService {
         this.gameState.tanks = tanksService.getInjuredTanks(movedTanks, collisions)
         this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, collisions)
         this.gameState.collisions = collisions
-        console.log('this.gameState.tanks ', this.gameState.tanks)
+        // console.log('this.gameState.tanks ', this.gameState.tanks)
         // .filter((bullet: IBullet): boolean => {
         //     return this.gameState.collisions.map((collision: ICollision) => {
         //         return bullet.id === collision.bulletId
