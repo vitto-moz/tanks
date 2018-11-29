@@ -8,7 +8,6 @@ class MapBuilder {
     }
 
     public getMapEnvironment(mapConfig: Map): IEnvironment {
-    // public getMapEnvironment(mapConfig: Map): void {
         const environmentElements =  mapConfig.map((
             row: EnvironmentElementsType[],
             rowIndex: number

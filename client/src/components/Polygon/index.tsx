@@ -1,10 +1,11 @@
 import * as React from "react";
 import styles from './polygonStyles'
 import {coordsToPixels} from '../../utils/helpers';
-import {IGameState, IBullet, ICollision} from '../../services/socketService/interfaces';
+import {IGameState, IBullet, ICollision, IWater} from '../../services/socketService/interfaces';
 import Tank from './Tank';
 import Bullet from './Bullet';
 import Explosion from './Explosion';
+import Water from './Water';
 
 interface Props {
     gameState: IGameState
@@ -63,6 +64,16 @@ class Polygon extends React.Component<Props, State> {
                     })
                 }
                 {this.getBullets()}
+
+                {
+                    Object.keys(this.props.gameState.environment.water).map((id: string) => {
+                        return <Water
+                            key={id}
+                            water={this.props.gameState.environment.water[id]}>
+                        </Water>
+                    })
+                }
+
                 {
                     this.props.gameState.collisions.map((collision: ICollision) => {
                         return <Explosion
