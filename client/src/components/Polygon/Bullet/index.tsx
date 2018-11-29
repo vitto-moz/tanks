@@ -36,7 +36,7 @@ class Bullet extends React.PureComponent<Props, State> {
           ...styles.bullet,
           // ...this.getBulletStyles(),
           transform: `translateX(${coordsToPixels(this.props.bullet.x)}px) translateY(${coordsToPixels(this.props.bullet.y)}px)`,
-          transition: '1s linear',
+          transition: '0.5s linear',
           opacity: this.state.visible ? 1 : 0
         }} />
     );

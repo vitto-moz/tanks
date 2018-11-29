@@ -21,7 +21,7 @@ export interface ITanksBullets {
     [index: string]: IBullet
 }
 
-const UPDATING_INTERVAL = 1000
+const UPDATING_INTERVAL = 250
 
 class GameService {
     public gameState: IGameState = GAME_STATE
@@ -33,12 +33,23 @@ class GameService {
     }
 
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
-        // emitUpdate - is a socket io event to update polygon 
+        // emitUpdate - is a socket io event to update polygon
+        let tick = 0
         setInterval(() => {
-            this.changeGameState(this.tanksMovements, this.tanksBullets, this.gameState.tanks)
+            this.updateDecider(tick)
             emitUpdate(this.gameState)
             this.clean()
+            tick++
         }, UPDATING_INTERVAL
+        )
+    }
+
+    private updateDecider(tick: number) {
+        const evenStep = tick % 2 === 0
+        this.changeGameState(
+            evenStep ? this.tanksMovements : null,
+            this.tanksBullets,
+            this.gameState.tanks
         )
     }
 
@@ -51,16 +62,27 @@ class GameService {
         this.gameState.tanks[tank.id] = tank
     }
 
-    private changeGameState(tanksMovements: ITanksMovements, newTanksBullets: ITanksBullets, tanks: ITanks) {
+    private getUpdatedTanks(tanksMovements: ITanksMovements, tanks: ITanks) {
         const possibleTanks = tanksService.getPossibleTanks(tanksMovements, tanks)
         const checkedTanks = obstacleService.getCheckedTanks(possibleTanks, tanks)
-        this.gameState.tanks = checkedTanks
+        return checkedTanks
+    }
+
+    private changeGameState(
+        tanksMovements: ITanksMovements | null,
+        newTanksBullets: ITanksBullets,
+        tanks: ITanks
+    ) {
+
+        this.gameState.tanks = tanksMovements
+            ? this.getUpdatedTanks(tanksMovements, tanks) : this.gameState.tanks
+
         const movedBullets =
             bulletsService.getMovedBullets(
                 this.gameState.bullets,
                 newTanksBullets
             )
-        const objectsToIntersect = Object.values(checkedTanks)
+        const objectsToIntersect = Object.values(this.gameState.tanks)
         this.gameState.collisions = [
             ...this.gameState.collisions,
             ...bulletsService.getBulletsCollisions(objectsToIntersect, movedBullets)

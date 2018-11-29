@@ -150,7 +150,7 @@ class Tank extends React.PureComponent<Props, State> {
         return (
             <div style={{
                 ...this.tankStyles,
-                transition: 'all 1s linear, rotate 0s linear 0s',
+                transition: 'all 0.5s linear, rotate 0s linear 0.5s',
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
