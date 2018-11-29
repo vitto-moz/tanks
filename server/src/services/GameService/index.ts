@@ -1,6 +1,10 @@
 import {Tank} from './tank.model';
-import {ITanks, Direction, Directions, ITank, IGameState} from './interfaces';
+import {ITanks, Direction, Directions, ITank, IGameState, IBullet, ICollision} from './interfaces';
 import GAME_STATE from './config';
+import tanksService from './TanksService';
+import bulletsService from './BulletsService';
+import obstacleService from './ObstacleService';
+import randomId from '../../utils/randomId';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -9,30 +13,43 @@ export const DIRECTIONS: Directions = {
     RIGHT: 'RIGHT',
 }
 
-interface ITanksMovements {
+export interface ITanksMovements {
     [index: string]: Direction
 }
 
-const UPDATING_INTERVAL = 1000
-const MOVE_QUANTUM = 1
+export interface ITanksBullets {
+    [index: string]: IBullet
+}
+
+const UPDATING_INTERVAL = 250
 
 class GameService {
     public gameState: IGameState = GAME_STATE
     public tanksMovements: ITanksMovements = {}
-    public tanksFires: string[] = []
+    public tanksBullets: ITanksBullets = {}
 
     constructor() {
-        this.moveTanks = this.moveTanks.bind(this)
-        this.getCheckedTanks = this.getCheckedTanks.bind(this)
+        this.changeGameState = this.changeGameState.bind(this)
     }
 
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
-        // emitUpdate - is a socket io event to update polygon 
+        // emitUpdate - is a socket io event to update polygon
+        let tick = 0
         setInterval(() => {
-            this.moveTanks(this.tanksMovements, this.tanksFires, this.gameState.tanks)
+            this.updateDecider(tick)
             emitUpdate(this.gameState)
             this.clean()
+            tick++
         }, UPDATING_INTERVAL
+        )
+    }
+
+    private updateDecider(tick: number) {
+        const evenStep = tick % 2 === 0
+        this.changeGameState(
+            evenStep ? this.tanksMovements : null,
+            this.tanksBullets,
+            this.gameState.tanks
         )
     }
 
@@ -45,104 +62,69 @@ class GameService {
         this.gameState.tanks[tank.id] = tank
     }
 
-    private moveTanks(tanksMovements: ITanksMovements, tanksFires: string[], tanks: ITanks) {
-        const possibleTanks = this.getPossibleTanks(tanksMovements, tanks)
-        const checkedTanks = this.getCheckedTanks(possibleTanks, tanks)
-        const tanksWithFires = this.getTanksWithFire(checkedTanks, tanksFires)
-        console.log('tanksWithFires ', tanksWithFires)
-        this.gameState.tanks = tanksWithFires
-        // this.gameState.tanks = checkedTanks
+    private getUpdatedTanks(tanksMovements: ITanksMovements, tanks: ITanks) {
+        const possibleTanks = tanksService.getPossibleTanks(tanksMovements, tanks)
+        const checkedTanks = obstacleService.getCheckedTanks(possibleTanks, tanks)
+        return checkedTanks
+    }
+
+    private changeGameState(
+        tanksMovements: ITanksMovements | null,
+        newTanksBullets: ITanksBullets,
+        tanks: ITanks
+    ) {
+
+        this.gameState.tanks = tanksMovements
+            ? this.getUpdatedTanks(tanksMovements, tanks) : this.gameState.tanks
+
+        const movedBullets =
+            bulletsService.getMovedBullets(
+                this.gameState.bullets,
+                newTanksBullets
+            )
+        // console.log('movedBullets ', movedBullets)
+        const objectsToIntersect = Object.values(this.gameState.tanks)
+        this.gameState.collisions = [
+            ...this.gameState.collisions,
+            ...bulletsService.getBulletsCollisions(objectsToIntersect, movedBullets)
+        ]
+
+        
+        this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, this.gameState.collisions)
+        // .filter((bullet: IBullet): boolean => {
+        //     return this.gameState.collisions.map((collision: ICollision) => {
+        //         return bullet.id === collision.bulletId
+        //     }).reduce((acc, value) => acc || value, false)
+        // })
     }
 
     private clean() {
         this.tanksMovements = {}
-        this.tanksFires = []
+        this.tanksBullets = {}
         Object.keys(this.gameState.tanks).map((tankId: string) => {
             return this.gameState.tanks[tankId].fire = false
         })
-    }
-
-    private getTanksWithFire(checkedTanks: ITanks, tanksFire: string[]): ITanks {
-        tanksFire.map(tankId => {
-            checkedTanks[tankId].fire = true
-        })
-        console.log('checkedTanks ', checkedTanks)
-        return checkedTanks
-    }
-
-    private getPossibleTanks(tanksMovements: ITanksMovements, tanks: ITanks): ITanks {
-        const possibleTanks: ITanks = {}
-        Object.keys(tanksMovements).map(id => {
-            possibleTanks[id] = this.getPossibleTankPosition(id, tanksMovements[id], tanks)
-        })
-        return {...tanks, ...possibleTanks}
     }
 
     public registerMovement(id: string, direction: Direction) {
         this.tanksMovements[id] = direction
     }
 
-    public getPossibleTankPosition(id: string, direction: Direction, tanks: ITanks): ITank {
-        const possibleTank: ITank = {...tanks[id]}
-        if (tanks[id]) {
-            possibleTank.direction = direction
-            switch (direction) {
-                case DIRECTIONS.UP:
-                    possibleTank.y = tanks[id].y - MOVE_QUANTUM
-                    break
-                case DIRECTIONS.DOWN:
-                    possibleTank.y = tanks[id].y + MOVE_QUANTUM
-                    break
-                case DIRECTIONS.LEFT:
-                    possibleTank.x = tanks[id].x - MOVE_QUANTUM
-                    break
-                case DIRECTIONS.RIGHT:
-                    possibleTank.x = tanks[id].x + MOVE_QUANTUM
-                    break
-            }
+    public registerBullet(tankId: string) {
+        this.tanksBullets[tankId] = this.addBullet(tankId)
+    }
+
+    public addBullet(tankId: string): IBullet {
+        return {
+            id: randomId(),
+            tankId,
+            x: this.gameState.tanks[tankId].x,
+            y: this.gameState.tanks[tankId].y,
+            new: true,
+            direction: this.gameState.tanks[tankId].direction
         }
-        return possibleTank
     }
 
-    public fire(id: string) {
-        this.tanksFires.push(id)
-    }
-
-    private getCheckedTanks(possibleTanks: ITanks, tanks: ITanks): ITanks {
-        Object.keys(possibleTanks)
-            .map(currentTankId => {
-                return {
-                    id: currentTankId,
-                    obstacles: Object.keys(possibleTanks).map((tankToCheckId) => {
-                        if (tankToCheckId !== currentTankId) {
-                            return possibleTanks[tankToCheckId].x === possibleTanks[currentTankId].x
-                                && possibleTanks[tankToCheckId].y === possibleTanks[currentTankId].y
-                        } else {
-                            return null
-                        }
-                    }).filter(tankObstacle => tankObstacle !== null)
-                }
-            })
-            .map((tankObstacle) => {
-                // if no obstacles we set false
-                return {
-                    id: tankObstacle.id,
-                    obstacle: tankObstacle.obstacles.length !== 0
-                        ? tankObstacle.obstacles.reduce((aggregatedObstacle, obstacle) => aggregatedObstacle || obstacle)
-                        : false
-                }
-            })
-            .map(tankObstacle => {
-                if (tankObstacle.obstacle) {
-                    possibleTanks[tankObstacle.id] = {
-                        ...tanks[tankObstacle.id],
-                        direction: possibleTanks[tankObstacle.id].direction
-                    }
-                }
-            })
-
-        return possibleTanks
-    }
 
 }
 

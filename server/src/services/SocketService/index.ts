@@ -38,11 +38,10 @@ class SocketService {
             });
 
             this.socket.on(SOCKET_EVENTS.FIRE, ({id}) => {
-                gameService.fire(id)
+                gameService.registerBullet(id)
             });
 
             this.socket.on(SOCKET_EVENTS.UPDATE_TANK, (tank: ITank) => {
-                console.log('tank ', tank)
                 gameService.updateTank(tank)
             });
 

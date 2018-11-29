@@ -1,9 +1,7 @@
 import * as React from "react";
 import styles from './tankStyles'
-import Trunk from './Trunk';
-import Bullet from './Bullet';
-import {ITank, IBullet, Direction} from '../../services/socketService/interfaces';
-import {coordsToPixels} from "../../utils/helpers";
+import {IBullet, ITank, Direction} from '../../../services/socketService/interfaces';
+import {coordsToPixels} from '../../../utils/helpers';
 
 export type direction = 'LEFT' | 'RIGHT' | 'UP' | 'DOWN' | 'SPACE'
 
@@ -102,10 +100,10 @@ class Tank extends React.PureComponent<Props, State> {
             if (rotateDeg > 180) rotateDeg = rotateDeg - 360;
             if (rotateDeg < -180) rotateDeg = rotateDeg + 360;
 
-            console.log(props.tank.direction);
-            console.log('state:' + this.state.deg);
-            console.log('target:' + targetDeg);
-            console.log('rotate:' + rotateDeg);
+            // console.log(props.tank.direction);
+            // console.log('state:' + this.state.deg);
+            // console.log('target:' + targetDeg);
+            // console.log('rotate:' + rotateDeg);
 
             if (rotateDeg !== 0) {
                 this.setState({
@@ -118,13 +116,13 @@ class Tank extends React.PureComponent<Props, State> {
     private onFire(direction: Direction) {
         this.setState(prevState => {
             const bullets = [...prevState.bullets]
-            bullets.push({onFly: true, direction})
+            // bullets.push({onFly: true, direction})
             return {fire: true, bullets}
         }, () => {
             setTimeout(() => {
                 this.setState(prevState => {
                     const bullets = prevState.bullets
-                    bullets[bullets.length - 1] = {onFly: false, direction}
+                    // bullets[bullets.length - 1] = {onFly: false, direction}
                     return {bullets}
                 })
             }, 3000)
@@ -135,7 +133,7 @@ class Tank extends React.PureComponent<Props, State> {
         this.setState(prevState => {
             const bullets = [...prevState.bullets]
             const bulletOnFinish = {...bullets[index]}
-            bulletOnFinish.onFly = false
+            // bulletOnFinish.onFly = false
             bullets[index] = bulletOnFinish
             return {bullets}
 
@@ -152,25 +150,13 @@ class Tank extends React.PureComponent<Props, State> {
         return (
             <div style={{
                 ...this.tankStyles,
-                transition: 'all 1s linear, rotate 0s linear 0s',
+                transition: 'all 0.5s linear, rotate 0s linear 0.5s',
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundImage: `url(${this.props.tank.skinUrl})`,
                 ...this.getTankStyles()
             }}>
-                {/*<Trunk direction={this.props.tank.direction} />*/}
-                {this.state.bullets.map((bullet, index) => {
-                    return bullet.onFly
-                        ? <Bullet
-                            key={index}
-                            index={index}
-                            direction={bullet.direction}
-                            onFly={bullet.onFly}
-                            onFinish={this.onFireFinish}
-                        />
-                        : null
-                })}
             </div>
         );
     }
