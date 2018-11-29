@@ -82,13 +82,16 @@ class GameService {
                 this.gameState.bullets,
                 newTanksBullets
             )
+        // console.log('movedBullets ', movedBullets)
         const objectsToIntersect = Object.values(this.gameState.tanks)
         this.gameState.collisions = [
             ...this.gameState.collisions,
             ...bulletsService.getBulletsCollisions(objectsToIntersect, movedBullets)
         ]
 
-        this.gameState.bullets = movedBullets
+        
+        this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, this.gameState.collisions)
+        console.log('this.gameState.bullets ', this.gameState.bullets)
         // .filter((bullet: IBullet): boolean => {
         //     return this.gameState.collisions.map((collision: ICollision) => {
         //         return bullet.id === collision.bulletId

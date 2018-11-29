@@ -27,7 +27,7 @@ class Explosion extends React.PureComponent<Props, State> {
     setTimeout(() => {
       this.setState({visible: true})
       this.props.onExplosion(this.props.collision)
-    }, 1500)
+    }, 500)
     setTimeout(() => {
       
       this.setState({visible: false})

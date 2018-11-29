@@ -81,9 +81,10 @@ class BulletsService {
 
     private getBulletHitLine(bullet: IBullet): IBulletHitPoint[] {
         let bulletHitLine: IBulletHitPoint[] = []
-        for (let i = 0;i < 3;i++) {
-            bulletHitLine.push(this.getBulletHitPoint(bullet, i))
-        }
+        // for (let i = 0;i < 3;i++) {
+        //     bulletHitLine.push(this.getBulletHitPoint(bullet, i))
+        // }
+        bulletHitLine.push(this.getBulletHitPoint(bullet, 0))
         return bulletHitLine
     }
 
@@ -99,6 +100,14 @@ class BulletsService {
                 return {x: bullet.x + step, y: bullet.y}
             default: return {x: bullet.x, y: bullet.y}
         }
+    }
+
+    public ridOfExploidedBullets(bullets: IBullet[], collisions: ICollision[]) {
+        return bullets.filter((bullet: IBullet): boolean => {
+            return collisions.map((collision: ICollision): boolean => {
+                return collision.bulletId !== bullet.id
+            }).reduce((acc, val) => { return acc && val}, true)
+        })
     }
 
 }
