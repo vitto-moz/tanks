@@ -53,7 +53,7 @@ class TanksService {
     public getInjuredTanks(tanks: ITanks, collisions: ICollision[]): ITanks {
         const injuredTanks = {...tanks}
         collisions.map((collision: ICollision) => {
-            if (!collision.done) {
+            if (!collision.done && injuredTanks[collision.objectId]) {
                 injuredTanks[collision.objectId].hp = injuredTanks[collision.objectId].hp - 20
             }
         })

@@ -94,7 +94,11 @@ class GameService {
                 newTanksBullets
             )
 
-        const objectsToIntersect = Object.values(movedTanks)
+        const objectsToIntersect = [
+            ...Object.values(movedTanks),
+            ...Object.values(this.gameState.environment.bricks)
+        ]
+
         const collisions = [
             ...this.gameState.collisions.map((collision: ICollision) => ({...collision, done: true})),
             ...bulletsService.getBulletsCollisions(objectsToIntersect, movedBullets)
