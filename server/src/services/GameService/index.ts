@@ -1,5 +1,5 @@
 import {Tank} from './tank.model';
-import {ITanks, Direction, Directions, ITank, IGameState, IBullet, ICollision, IEnvironment} from './interfaces';
+import { ITanks, Direction, Directions, ITank, IGameState, IBullet, ICollision, IEnvironment, gameSpeed, IGameSpeed } from './interfaces';
 import GAME_STATE from './config';
 import tanksService from './TanksService';
 import bulletsService from './BulletsService';
@@ -48,11 +48,13 @@ class GameService {
     }
 
     private updateDecider(tick: number) {
-        const evenStep = tick % 2 === 0
+        const medium = tick % 2 === 0
+        const slow = tick % 20 === 0
         this.changeGameState(
-            evenStep ? this.tanksMovements : null,
+            medium ? this.tanksMovements : null,
             this.tanksBullets,
-            this.gameState.tanks
+            this.gameState.tanks,
+            {slow, medium, fast: true}
         )
     }
 
@@ -82,7 +84,8 @@ class GameService {
     private changeGameState(
         tanksMovements: ITanksMovements | null,
         newTanksBullets: ITanksBullets,
-        tanks: ITanks
+        tanks: ITanks,
+        speed: IGameSpeed
     ) {
 
         const movedTanks = tanksMovements
@@ -106,7 +109,12 @@ class GameService {
 
         this.gameState.tanks = tanksService.getInjuredTanks(movedTanks, collisions)
         this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, collisions)
-        this.gameState.collisions = collisions
+
+        this.gameState.collisions = speed.slow
+            ? collisions.filter((collisions: ICollision) => {
+                return !collisions.done
+            })
+            : collisions
     }
 
     private clean() {

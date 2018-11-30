@@ -81,6 +81,12 @@ export interface IGameState {
     bullets: IBullet[]
 }
 
+export interface IGameSpeed {
+    slow: boolean
+    medium: boolean
+    fast: boolean
+}
+
 export type IObstacle = IWater | IBrick
 
 export type Directions = {[k in Direction]: Direction}
