@@ -2,6 +2,7 @@ import * as React from "react";
 import styles from './tankStyles'
 import {IBullet, ITank, Direction} from '../../../services/socketService/interfaces';
 import {coordsToPixels} from '../../../utils/helpers';
+import Health from './Health';
 
 export type direction = 'LEFT' | 'RIGHT' | 'UP' | 'DOWN' | 'SPACE'
 
@@ -140,23 +141,30 @@ class Tank extends React.PureComponent<Props, State> {
         })
     }
 
-    private getTankStyles() {
+    private getTankPositionStyles() {
         return {
-            transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px) rotate(${this.state.deg}deg)`
+            transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px)`
         }
     }
 
     render() {
         return (
             <div style={{
-                ...this.tankStyles,
                 transition: 'all 0.5s linear, rotate 0s linear 0.5s',
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundImage: `url(${this.props.tank.skinUrl})`,
-                ...this.getTankStyles()
+                ...this.getTankPositionStyles(),
+                ...styles.tankWrap
             }}>
+                <Health hp={this.props.tank.hp}></Health>
+                <div style={{
+                    ...this.tankStyles,
+                    transform: `rotate(${this.state.deg}deg)`,
+                    transition: 'all 0.5s linear, rotate 0s linear 0.5s',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    backgroundImage: `url(${this.props.tank.skinUrl})`,
+                }}>
+                </div>
             </div>
         );
     }

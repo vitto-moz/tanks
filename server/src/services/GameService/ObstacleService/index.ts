@@ -1,3 +1,4 @@
+import {IObstacle} from './../interfaces';
 import {ITanks, Directions, ITank, IBullet} from '../interfaces';
 
 export const DIRECTIONS: Directions = {
@@ -13,7 +14,7 @@ class ObstacleService {
     constructor() {
     }
 
-    public getCheckedTanks(possibleTanks: ITanks, tanks: ITanks): ITanks {
+    public getCheckedTanksToEachOther(possibleTanks: ITanks, tanks: ITanks): ITanks {
         Object.keys(possibleTanks)
             .map(currentTankId => {
                 return {
@@ -45,6 +46,26 @@ class ObstacleService {
                     }
                 }
             })
+
+        return possibleTanks
+    }
+
+    public checkTanksToEnvironment(
+        possibleTanks: ITanks,
+        obstacles: IObstacle[],
+        tanks: ITanks
+    ): ITanks {
+
+        const tanksOnObstacle = Object.values(possibleTanks)
+            .filter((possibleTank: ITank) => {
+                return obstacles.map((obstacle: IObstacle): boolean => {
+                    return possibleTank.x === obstacle.x && possibleTank.y === obstacle.y
+                }).reduce((acc, val) => {return acc || val}, false)
+            })
+
+        tanksOnObstacle.map((tank: ITank) => {
+            possibleTanks[tank.id] = tanks[tank.id]
+        })
 
         return possibleTanks
     }

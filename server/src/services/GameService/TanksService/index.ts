@@ -1,4 +1,4 @@
-import {ITanks, Direction, Directions, ITank} from '../interfaces';
+import {ITanks, Direction, Directions, ITank, ICollision} from '../interfaces';
 import CONSTANTS from '../../../constants';
 
 export const DIRECTIONS: Directions = {
@@ -48,6 +48,16 @@ class TanksService {
             }
         }
         return possibleTank
+    }
+
+    public getInjuredTanks(tanks: ITanks, collisions: ICollision[]): ITanks {
+        const injuredTanks = {...tanks}
+        collisions.map((collision: ICollision) => {
+            if (!collision.done) {
+                injuredTanks[collision.objectId].hp = injuredTanks[collision.objectId].hp - 20
+            }
+        })
+        return injuredTanks
     }
 
 }

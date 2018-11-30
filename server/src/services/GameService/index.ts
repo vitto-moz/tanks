@@ -1,10 +1,12 @@
 import {Tank} from './tank.model';
-import {ITanks, Direction, Directions, ITank, IGameState, IBullet, ICollision} from './interfaces';
+import {ITanks, Direction, Directions, ITank, IGameState, IBullet, ICollision, IEnvironment} from './interfaces';
 import GAME_STATE from './config';
 import tanksService from './TanksService';
 import bulletsService from './BulletsService';
 import obstacleService from './ObstacleService';
 import randomId from '../../utils/randomId';
+import mapBuilder from './MapBuilder';
+import map from './Map';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -30,6 +32,7 @@ class GameService {
 
     constructor() {
         this.changeGameState = this.changeGameState.bind(this)
+        this.gameState.environment = mapBuilder.getMapEnvironment(map)
     }
 
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
@@ -64,8 +67,16 @@ class GameService {
 
     private getUpdatedTanks(tanksMovements: ITanksMovements, tanks: ITanks) {
         const possibleTanks = tanksService.getPossibleTanks(tanksMovements, tanks)
-        const checkedTanks = obstacleService.getCheckedTanks(possibleTanks, tanks)
-        return checkedTanks
+        const checkedTanksToEachOther = obstacleService.getCheckedTanksToEachOther(possibleTanks, tanks)
+        const checkedTanksToEnvironment = obstacleService.checkTanksToEnvironment(
+            checkedTanksToEachOther,
+            [
+                ...Object.values(this.gameState.environment.water),
+                ...Object.values(this.gameState.environment.bricks)
+            ],
+            tanks
+        )
+        return checkedTanksToEnvironment
     }
 
     private changeGameState(
@@ -74,7 +85,7 @@ class GameService {
         tanks: ITanks
     ) {
 
-        this.gameState.tanks = tanksMovements
+        const movedTanks = tanksMovements
             ? this.getUpdatedTanks(tanksMovements, tanks) : this.gameState.tanks
 
         const movedBullets =
@@ -82,20 +93,16 @@ class GameService {
                 this.gameState.bullets,
                 newTanksBullets
             )
-        // console.log('movedBullets ', movedBullets)
-        const objectsToIntersect = Object.values(this.gameState.tanks)
-        this.gameState.collisions = [
-            ...this.gameState.collisions,
+
+        const objectsToIntersect = Object.values(movedTanks)
+        const collisions = [
+            ...this.gameState.collisions.map((collision: ICollision) => ({...collision, done: true})),
             ...bulletsService.getBulletsCollisions(objectsToIntersect, movedBullets)
         ]
 
-        
-        this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, this.gameState.collisions)
-        // .filter((bullet: IBullet): boolean => {
-        //     return this.gameState.collisions.map((collision: ICollision) => {
-        //         return bullet.id === collision.bulletId
-        //     }).reduce((acc, value) => acc || value, false)
-        // })
+        this.gameState.tanks = tanksService.getInjuredTanks(movedTanks, collisions)
+        this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, collisions)
+        this.gameState.collisions = collisions
     }
 
     private clean() {

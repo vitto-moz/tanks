@@ -5,12 +5,12 @@ const GAME_STATE: IGameState = {
     bullets: [],
     collisions: [],
     environment: {
-        walls: {},
+        bricks: {},
         water: {},
     },
     config: {
-        x: 500,
-        y: 500,
+        x: 100,
+        y: 100,
     }
 }
 

@@ -17,6 +17,7 @@ interface IObjectToIntersect {
 class BulletsService {
 
     private bulletsToDelete: IBullet[] = []
+    private oldCollisions: ICollision[] = []
 
     constructor() {
     }
@@ -54,7 +55,7 @@ class BulletsService {
         objectsToIntersect: IObjectToIntersect[],
         bullets: IBullet[]
     ): ICollision[] {
-        return bullets
+        const collisions = bullets
             .map((bullet: IBullet) => {
                 return this.getBulletCollisions(bullet, objectsToIntersect)
             })
@@ -63,7 +64,7 @@ class BulletsService {
                 const bullet = bullets.filter(bullet => bullet.id === collision.bulletId)[0]
                 return collision.objectId !== bullet.tankId
             })
-
+        return collisions
     }
 
     private getBulletCollisions(bullet: IBullet, objectsToIntersect: IObjectToIntersect[]): ICollision[] {
@@ -75,7 +76,8 @@ class BulletsService {
                         objectId: object.id,
                         x: bulletHitPoint.x,
                         y: bulletHitPoint.y,
-                        active: bulletHitPoint.x === object.x && bulletHitPoint.y === object.y
+                        active: bulletHitPoint.x === object.x && bulletHitPoint.y === object.y,
+                        done: false
                     }
                 }).filter((collision: ICollision) => collision.active)
         }).reduce((acc, val) => acc.concat(val), [])

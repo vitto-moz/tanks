@@ -26,13 +26,20 @@ export interface IConfig {
     y: number
 }
 
-export interface IWall {
+export type EnvironmentElementsType = 'w' | 'e' | 'b'
+export type EnvironmentElement = IBrick | IWater
+
+export interface IBrick {
+    id: string
+    type: EnvironmentElementsType
     x: number
     y: number
     hp: number
 }
 
 export interface IWater {
+    id: string
+    type: EnvironmentElementsType
     x: number
     y: number
     hp: number
@@ -52,7 +59,7 @@ export interface IBullets {
 }
 
 export interface IEnvironment {
-    walls: {[index: string]: IWall}
+    bricks: {[index: string]: IBrick}
     water: {[index: string]: IWater}
 }
 
@@ -62,6 +69,7 @@ export interface ICollision {
     x: number
     y: number
     active: boolean
+    done: boolean
 }
 
 export interface IGameState {
@@ -71,5 +79,7 @@ export interface IGameState {
     collisions: ICollision[]
     bullets: IBullet[]
 }
+
+export type IObstacle = IWater | IBrick
 
 export type Directions = {[k in Direction]: Direction}
