@@ -6,7 +6,7 @@ const styles: any = {
     height: '10px',
     left: '45px',
     top: '45px',
-    zIndex: 0
+    zIndex: 6
   }
 };
 

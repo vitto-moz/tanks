@@ -56,6 +56,7 @@ class BulletsService {
         bullets: IBullet[]
     ): ICollision[] {
         const collisions = bullets
+            .filter((bullet: IBullet) => !bullet.exploided)
             .map((bullet: IBullet) => {
                 return this.getBulletCollisions(bullet, objectsToIntersect)
             })
@@ -123,7 +124,14 @@ class BulletsService {
                 .reduce((acc, val) => {return acc || val}, false)
         })
 
-        return existingBullets
+        return existingBullets.map(((bullet: IBullet) => {
+            return {
+                ...bullet,
+                exploided: this.bulletsToDelete
+                    .filter((bulletToDelete: IBullet) => bulletToDelete.id === bullet.id)
+                    .length > 0
+            }
+        }))
     }
 
 }

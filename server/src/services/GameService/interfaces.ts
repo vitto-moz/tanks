@@ -52,6 +52,7 @@ export interface IBullet {
     y: number
     new: boolean
     direction: Direction
+    exploided: boolean
 }
 
 export interface IBullets {

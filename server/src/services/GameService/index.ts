@@ -132,7 +132,8 @@ class GameService {
             x: this.gameState.tanks[tankId].x,
             y: this.gameState.tanks[tankId].y,
             new: true,
-            direction: this.gameState.tanks[tankId].direction
+            direction: this.gameState.tanks[tankId].direction,
+            exploided: false
         }
     }
 
