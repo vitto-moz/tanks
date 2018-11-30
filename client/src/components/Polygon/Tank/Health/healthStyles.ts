@@ -4,7 +4,7 @@ const styles = {
     backgroundColor: 'red',
     width: '50px',
     height: '10px',
-    zIndex: 5,
+    zIndex: 7,
     top: '-15px',
     left: '22px'
   },
@@ -12,7 +12,6 @@ const styles = {
     position: 'relative',
     backgroundColor: 'green',
     height: '10px',
-    zIndex: 6,
     transition: 'all 0.5s 0.5s linear',
   }
 } as React.CSSProperties 

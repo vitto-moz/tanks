@@ -59,11 +59,7 @@ class Polygon extends React.Component<Props, State> {
     render() {
         return (
             <div style={this.polygonStyles}>
-                {
-                    Object.keys(this.props.gameState.tanks).map(id => {
-                        return <Tank key={id} tank={this.props.gameState.tanks[id]} />
-                    })
-                }
+              
 
                 {
                     Object.keys(this.props.gameState.environment.water).map((id: string) => {
@@ -85,6 +81,12 @@ class Polygon extends React.Component<Props, State> {
 
 
                 {this.getBullets()}
+                
+                {
+                    Object.keys(this.props.gameState.tanks).map(id => {
+                        return <Tank key={id} tank={this.props.gameState.tanks[id]} />
+                    })
+                }
 
                 {
                     this.props.gameState.collisions.map((collision: ICollision) => {

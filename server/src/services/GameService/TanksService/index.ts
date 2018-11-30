@@ -54,7 +54,7 @@ class TanksService {
         const injuredTanks = {...tanks}
         collisions.map((collision: ICollision) => {
             if (!collision.done && injuredTanks[collision.objectId]) {
-                injuredTanks[collision.objectId].hp = injuredTanks[collision.objectId].hp - 20
+                injuredTanks[collision.objectId].hp = injuredTanks[collision.objectId].hp - 5
             }
         })
         return injuredTanks
