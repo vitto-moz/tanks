@@ -6,6 +6,7 @@ import Tank from './Tank';
 import Bullet from './Bullet';
 import Explosion from './Explosion';
 import Water from './Water';
+import Brick from './Brick';
 
 interface Props {
     gameState: IGameState
@@ -71,6 +72,15 @@ class Polygon extends React.Component<Props, State> {
                             key={id}
                             water={this.props.gameState.environment.water[id]}>
                         </Water>
+                    })
+                }
+
+                {
+                    Object.keys(this.props.gameState.environment.bricks).map((id: string) => {
+                        return <Brick
+                            key={id}
+                            brick={this.props.gameState.environment.bricks[id]}>
+                        </Brick>
                     })
                 }
 
