@@ -12,6 +12,8 @@ interface ITanksMovements {
     [index: string]: Direction
 }
 
+const INJURE_QUANTUM = 5
+
 class TanksService {
 
     constructor() {
@@ -54,7 +56,10 @@ class TanksService {
         const injuredTanks = {...tanks}
         collisions.map((collision: ICollision) => {
             if (!collision.done && injuredTanks[collision.objectId]) {
-                injuredTanks[collision.objectId].hp = injuredTanks[collision.objectId].hp - 5
+                injuredTanks[collision.objectId].hp = injuredTanks[collision.objectId].hp - INJURE_QUANTUM
+                if (injuredTanks[collision.objectId].hp <= 0) {
+                    delete injuredTanks[collision.objectId]
+                }
             }
         })
         return injuredTanks
