@@ -1,5 +1,14 @@
 import {Tank} from './tank.model';
-import { ITanks, Direction, Directions, ITank, IGameState, IBullet, ICollision, IEnvironment, gameSpeed, IGameSpeed } from './interfaces';
+import {
+    ITanks,
+    Direction,
+    Directions,
+    ITank,
+    IGameState,
+    IBullet,
+    ICollision,
+    IGameSpeed
+} from './interfaces';
 import GAME_STATE from './config';
 import tanksService from './TanksService';
 import bulletsService from './BulletsService';
