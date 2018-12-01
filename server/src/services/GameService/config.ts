@@ -9,8 +9,8 @@ const GAME_STATE: IGameState = {
         water: {},
     },
     config: {
-        x: 100,
-        y: 100,
+        x: 50,
+        y: 50,
     }
 }
 

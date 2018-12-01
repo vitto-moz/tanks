@@ -140,7 +140,9 @@ class GameService {
     }
 
     public registerBullet(tankId: string) {
-        this.tanksBullets[tankId] = this.addBullet(tankId)
+        if (this.gameState.tanks[tankId]) {
+            this.tanksBullets[tankId] = this.addBullet(tankId)
+        }
     }
 
     public addBullet(tankId: string): IBullet {
