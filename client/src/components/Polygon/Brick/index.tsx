@@ -22,11 +22,11 @@ class Brick extends React.PureComponent<Props, State> {
   render() {
     return (<div style={{
           ...styles.water,
-          backgroundSize: 'contain',
+          backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
           backgroundColor: 'brown',
-          // backgroundImage: `url(/assets/images/water.png)`,
+          backgroundImage: `url(/assets/images/bricks.png)`,
           transform: `translateX(${coordsToPixels(this.props.brick.x)}px) translateY(${coordsToPixels(this.props.brick.y)}px)`,
           transition: '1s linear',
         }}>
