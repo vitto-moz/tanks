@@ -154,7 +154,10 @@ class Tank extends React.PureComponent<Props, State> {
                 ...this.getTankPositionStyles(),
                 ...styles.tankWrap
             }}>
-                <Health hp={this.props.tank.hp}></Health>
+                <Health
+                    hp={this.props.tank.hp}
+                    teamId={this.props.tank.teamId}
+                />
                 <div style={{
                     ...this.tankStyles,
                     transform: `rotate(${this.state.deg}deg)`,

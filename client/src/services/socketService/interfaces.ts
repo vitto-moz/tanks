@@ -5,6 +5,8 @@ export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 //     direction: Direction;
 // }
 
+export type TeamId = 'YELLOW' | 'GREEN'
+
 export interface ITank {
     id: string
     name: string
@@ -15,7 +17,8 @@ export interface ITank {
     bullets: IBullet[]
     fire: boolean
     skinUrl: string
-};
+    teamId: TeamId
+}
 
 export interface ITanks {
     [index: string]: ITank

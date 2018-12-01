@@ -10,7 +10,6 @@ const styles = {
   },
   health: {
     position: 'relative',
-    backgroundColor: 'green',
     height: '10px',
     transition: 'all 0.5s 0.5s linear',
   }

@@ -7,7 +7,8 @@ import {
     IGameState,
     IBullet,
     ICollision,
-    IGameSpeed
+    IGameSpeed,
+    TeamId
 } from './interfaces';
 import GAME_STATE from './config';
 import tanksService from './TanksService';
@@ -67,8 +68,8 @@ class GameService {
         )
     }
 
-    public addTank(name: string, id: string): string {
-        this.gameState.tanks[id] = new Tank(name, id)
+    public addTank(name: string, id: string, teamId: TeamId): string {
+        this.gameState.tanks[id] = new Tank(name, id, teamId)
         return id
     }
 
