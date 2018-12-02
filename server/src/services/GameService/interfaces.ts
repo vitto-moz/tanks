@@ -24,12 +24,19 @@ export interface ITanks {
     [index: string]: ITank
 }
 
+export interface IStartPoint {
+    x: number
+    y: number
+    type: EnvironmentElementsType
+    free: boolean
+}
+
 export interface IConfig {
     x: number
     y: number
 }
 
-export type EnvironmentElementsType = 'w' | 'e' | 'b'
+export type EnvironmentElementsType = 'w' | 'e' | 'b' | 'g' | 'y'
 export type EnvironmentElement = IBrick | IWater
 
 export interface IBrick {

@@ -1,14 +1,13 @@
-import {Map} from './../Map/index';
-import {IEnvironment, EnvironmentElement, EnvironmentElementsType, IWater, IBrick} from '../interfaces';
+import map, {Map} from './../Map/index';
+import {IEnvironment, EnvironmentElement, EnvironmentElementsType, IWater, IBrick, IStartPoint} from '../interfaces';
 import randomId from '../../../utils/randomId';
 
 class MapBuilder {
 
-    constructor() {
-    }
+    private environmentElements: EnvironmentElement[] = []
 
-    public getMapEnvironment(mapConfig: Map): IEnvironment {
-        const environmentElements =  mapConfig.map((
+    constructor(mapConfig: Map) {
+        this.environmentElements = mapConfig.map((
             row: EnvironmentElementsType[],
             rowIndex: number
         ): EnvironmentElement[] => {
@@ -24,32 +23,45 @@ class MapBuilder {
                 })
             return rowElements
         }).reduce((acc, val) => acc.concat(val), [])
-    
-        return this.getEnvironmentFromElements(environmentElements)
+    }
+
+    public getMapEnvironment(): IEnvironment {
+        return this.getEnvironmentFromElements(this.environmentElements)
+    }
+
+    public getStartPoints(): IStartPoint[] {
+        return this.environmentElements.filter((element: EnvironmentElement) => {
+            return element.type === 'y' || element.type === 'g'
+        }).map((startPoint: EnvironmentElement): IStartPoint => {
+            return {
+                ...startPoint,
+                free: true
+            }
+        })
     }
 
     private getEnvironmentFromElements(elements: EnvironmentElement[]): IEnvironment {
         const water: {[index: string]: IWater} = {}
-        elements.filter((element:EnvironmentElement) => {
+        elements.filter((element: EnvironmentElement) => {
             return element.type === 'w'
         }).map((waterElement: IWater) => {
             water[waterElement.id] = waterElement
         })
 
         const bricks: {[index: string]: IBrick} = {}
-        elements.filter((element:EnvironmentElement) => {
+        elements.filter((element: EnvironmentElement) => {
             return element.type === 'b'
         }).map((brickElement: IBrick) => {
             bricks[brickElement.id] = brickElement
         })
 
         return {
-            bricks, 
+            bricks,
             water
         }
-        
+
     }
 }
 
-const mapBuilder = new MapBuilder()
+const mapBuilder = new MapBuilder(map)
 export default mapBuilder
