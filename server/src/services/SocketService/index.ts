@@ -1,4 +1,4 @@
-import {IGameState} from './../GameService/interfaces';
+import {IGameState, TeamId} from './../GameService/interfaces';
 import {Socket} from 'socket.io';
 import gameService from '../GameService';
 import {ITank} from '../GameService/interfaces';
@@ -25,10 +25,10 @@ class SocketService {
 
     private bindSocketEvents() {
         if (this.socket) {
-            this.socket.on(SOCKET_EVENTS.REGISTER_USER, (name: string, fn) => {
+            this.socket.on(SOCKET_EVENTS.REGISTER_USER, (name: string, teamId: TeamId, fn) => {
                 this.socket
                 if (this.socket) {
-                    gameService.addTank(name, this.socket.id)
+                    gameService.addTank(name, this.socket.id, teamId)
                     fn(this.socket.id)
                 }
             });

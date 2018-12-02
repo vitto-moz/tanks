@@ -7,7 +7,9 @@ import {
     IGameState,
     IBullet,
     ICollision,
-    IGameSpeed
+    IGameSpeed,
+    TeamId,
+    IStartPoint
 } from './interfaces';
 import GAME_STATE from './config';
 import tanksService from './TanksService';
@@ -15,7 +17,6 @@ import bulletsService from './BulletsService';
 import obstacleService from './ObstacleService';
 import randomId from '../../utils/randomId';
 import mapBuilder from './MapBuilder';
-import map from './Map';
 
 export const DIRECTIONS: Directions = {
     UP: 'UP',
@@ -38,10 +39,12 @@ class GameService {
     public gameState: IGameState = GAME_STATE
     public tanksMovements: ITanksMovements = {}
     public tanksBullets: ITanksBullets = {}
+    public startPoints: IStartPoint[] = []
 
     constructor() {
         this.changeGameState = this.changeGameState.bind(this)
-        this.gameState.environment = mapBuilder.getMapEnvironment(map)
+        this.gameState.environment = mapBuilder.getMapEnvironment()
+        this.startPoints = mapBuilder.getStartPoints()
     }
 
     public startUpdatingSycle(emitUpdate: (gameState: IGameState) => void) {
@@ -67,8 +70,9 @@ class GameService {
         )
     }
 
-    public addTank(name: string, id: string): string {
-        this.gameState.tanks[id] = new Tank(name, id)
+    public addTank(name: string, id: string, teamId: TeamId): string {
+        this.gameState.tanks[id] =
+            new Tank(name, id, teamId, this.startPoints, this.gameState.tanks)
         return id
     }
 
@@ -139,7 +143,9 @@ class GameService {
     }
 
     public registerBullet(tankId: string) {
-        this.tanksBullets[tankId] = this.addBullet(tankId)
+        if (this.gameState.tanks[tankId]) {
+            this.tanksBullets[tankId] = this.addBullet(tankId)
+        }
     }
 
     public addBullet(tankId: string): IBullet {

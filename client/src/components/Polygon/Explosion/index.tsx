@@ -15,7 +15,7 @@ interface State {
 }
 
 class Explosion extends React.PureComponent<Props, State> {
-
+  private mounted: boolean = true
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -25,13 +25,18 @@ class Explosion extends React.PureComponent<Props, State> {
 
   public componentDidMount() {
     setTimeout(() => {
-      this.setState({visible: true})
-      this.props.onExplosion(this.props.collision)
+      if (this.mounted) {
+        this.setState({visible: true})
+        this.props.onExplosion(this.props.collision)
+      }
     }, 500)
     setTimeout(() => {
-      
-      this.setState({visible: false})
+      this.mounted && this.setState({visible: false})
     }, 2000)
+  }
+
+  public componentWillUnmount(){
+    this.mounted = false
   }
 
   render() {

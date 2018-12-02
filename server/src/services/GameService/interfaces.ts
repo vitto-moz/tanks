@@ -5,6 +5,8 @@ export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
 //     direction: Direction;
 // }
 
+export type TeamId = 'YELLOW' | 'GREEN'
+
 export interface ITank {
     id: string
     name: string
@@ -15,10 +17,18 @@ export interface ITank {
     bullets: IBullet[]
     fire: boolean
     skinUrl: string
+    teamId: TeamId
 }
 
 export interface ITanks {
     [index: string]: ITank
+}
+
+export interface IStartPoint {
+    x: number
+    y: number
+    type: EnvironmentElementsType
+    free: boolean
 }
 
 export interface IConfig {
@@ -26,7 +36,7 @@ export interface IConfig {
     y: number
 }
 
-export type EnvironmentElementsType = 'w' | 'e' | 'b'
+export type EnvironmentElementsType = 'w' | 'e' | 'b' | 'g' | 'y'
 export type EnvironmentElement = IBrick | IWater
 
 export interface IBrick {

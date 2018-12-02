@@ -22,7 +22,7 @@ class Water extends React.PureComponent<Props, State> {
   render() {
     return (<div style={{
           ...styles.water,
-          backgroundSize: 'contain',
+          backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
           backgroundColor: 'blue',
