@@ -6,6 +6,7 @@
   "author": "Luis Aviles",
   "license": "MIT",
   "scripts": {
+    "build": "gulp build",
     "dev": "gulp watch",
     "start": "node dist/index.js"
   },
