@@ -1,6 +1,6 @@
 import * as React from "react";
 import styles from './tankStyles'
-import {IBullet, ITank, Direction} from '../../../services/socketService/interfaces';
+import {IBullet, ITank, Direction, ICoordinate} from '../../../services/socketService/interfaces';
 import {coordsToPixels} from '../../../utils/helpers';
 import Health from './Health';
 
@@ -37,8 +37,9 @@ const keysActions: IKeyActions = {
 };
 
 interface Props {
-    tank: ITank
-};
+    tank: ITank,
+    addFinishExplosion: (oordinates: ICoordinate) => void
+}
 
 interface State {
     top: number
@@ -128,6 +129,11 @@ class Tank extends React.PureComponent<Props, State> {
                 })
             }, 3000)
         })
+    }
+
+    public componentWillUnmount(){
+        const {x, y} = this.props.tank
+        this.props.addFinishExplosion({x, y})
     }
 
     private onFireFinish(index: number) {
