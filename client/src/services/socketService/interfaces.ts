@@ -78,4 +78,14 @@ export interface IGameState {
     collisions: ICollision[]
 }
 
+export interface ICoordinate {
+    id: string,
+    x: number,
+    y: number
+}
+
+export interface ICoordinates {
+    [index: string]: ICoordinate
+}
+
 export type Directions = {[k in Direction]: Direction};

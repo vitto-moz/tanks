@@ -1,10 +1,11 @@
 import * as React from "react";
 import styles from './polygonStyles'
-import {coordsToPixels} from '../../utils/helpers';
-import {IGameState, IBullet, ICollision, IWater} from '../../services/socketService/interfaces';
+import {coordsToPixels, randomId} from '../../utils/helpers';
+import {IGameState, IBullet, ICollision, IWater, ICoordinate, ICoordinates} from '../../services/socketService/interfaces';
 import Tank from './Tank';
 import Bullet from './Bullet';
 import Explosion from './Explosion';
+import ExplosionFinish from './ExplosionFinish';
 import Water from './Water';
 import Brick from './Brick';
 
@@ -14,6 +15,7 @@ interface Props {
 
 interface State {
     explodedBulletsIds: string[]
+    finishExplosions: ICoordinates
 };
 
 class Polygon extends React.Component<Props, State> {
@@ -23,8 +25,11 @@ class Polygon extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.onExplosion = this.onExplosion.bind(this)
+        this.addFinishExplosion = this.addFinishExplosion.bind(this)
+        this.removeFinishExplosion = this.removeFinishExplosion.bind(this)
         this.state = {
-            explodedBulletsIds: []
+            explodedBulletsIds: [],
+            finishExplosions: {}
         }
     }
 
@@ -46,6 +51,24 @@ class Polygon extends React.Component<Props, State> {
         })
     }
 
+    private addFinishExplosion(coordinate: ICoordinate) {
+        const id = randomId()
+        this.setState(prevState => {
+            return {
+                finishExplosions: {
+                    ...prevState.finishExplosions,
+                    [id]: {...coordinate, id}
+                }
+            }
+        })
+    }
+
+    private removeFinishExplosion(id: string) {
+        const finishExplosions = {... this.state.finishExplosions}
+        delete finishExplosions[id]
+        this.setState({finishExplosions})
+    }
+
     private getBullets() {
         return this.props.gameState.bullets
             .filter((bullet: IBullet) => {
@@ -59,7 +82,7 @@ class Polygon extends React.Component<Props, State> {
     render() {
         return (
             <div style={this.polygonStyles}>
-              
+
 
                 {
                     Object.keys(this.props.gameState.environment.water).map((id: string) => {
@@ -81,10 +104,14 @@ class Polygon extends React.Component<Props, State> {
 
 
                 {this.getBullets()}
-                
+
                 {
                     Object.keys(this.props.gameState.tanks).map(id => {
-                        return <Tank key={id} tank={this.props.gameState.tanks[id]} />
+                        return <Tank
+                            key={id}
+                            tank={this.props.gameState.tanks[id]}
+                            addFinishExplosion={this.addFinishExplosion}
+                        />
                     })
                 }
 
@@ -94,6 +121,15 @@ class Polygon extends React.Component<Props, State> {
                             key={collision.bulletId}
                             onExplosion={this.onExplosion}
                             collision={collision}
+                        />
+                    })
+                }
+                {
+                    Object.keys(this.state.finishExplosions).map((id: string) => {
+                        return <ExplosionFinish
+                            key={id}
+                            coordinate={this.state.finishExplosions[id]}
+                            removeFinishExplosion={this.removeFinishExplosion}
                         />
                     })
                 }
