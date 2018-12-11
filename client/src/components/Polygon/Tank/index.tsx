@@ -38,7 +38,7 @@ const keysActions: IKeyActions = {
 
 interface Props {
     tank: ITank,
-    addFinishExplosion: (oordinates: ICoordinate) => void
+    addFinishExplosion: (cordinates: {x: number, y: number}) => void
 }
 
 interface State {

@@ -51,7 +51,7 @@ class Polygon extends React.Component<Props, State> {
         })
     }
 
-    private addFinishExplosion(coordinate: ICoordinate) {
+    private addFinishExplosion(coordinate: {x: number, y: number}) {
         const id = randomId()
         this.setState(prevState => {
             return {
