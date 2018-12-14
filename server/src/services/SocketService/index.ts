@@ -5,7 +5,7 @@ import {ITank} from '../GameService/interfaces';
 import SOCKET_EVENTS from './socketEvents';
 
 class SocketService {
-    private socket: Socket | null = null
+    // private socket: Socket | null = null
     private io: Socket | null = null
 
     constructor() {
@@ -14,7 +14,7 @@ class SocketService {
 
     public listen(socket: Socket, io: Socket) {
         this.registerSocket(socket, io)
-        if (this.socket) this.bindSocketEvents()
+        this.bindSocketEvents(socket)
     }
 
     private emitUpdate(gameState: IGameState) {
@@ -23,42 +23,41 @@ class SocketService {
         }
     }
 
-    private bindSocketEvents() {
-        if (this.socket) {
-            this.socket.on(SOCKET_EVENTS.REGISTER_USER, (
+    private bindSocketEvents(socket: Socket) {
+        if (socket) {
+            socket.on(SOCKET_EVENTS.REGISTER_USER, (
                 name: string,
                 teamId: TeamId,
                 skinUrl: string,
                 fn
             ) => {
-                this.socket
-                if (this.socket) {
-                    gameService.addTank(name, this.socket.id, teamId, skinUrl)
-                    fn(this.socket.id)
+                socket
+                if (socket) {
+                    gameService.addTank(name, socket.id, teamId, skinUrl)
+                    fn(socket.id)
                 }
             });
 
-            this.socket.on(SOCKET_EVENTS.MOVE, ({id, direction}) => {
+            socket.on(SOCKET_EVENTS.MOVE, ({id, direction}) => {
                 gameService.registerMovement(id, direction)
             });
 
-            this.socket.on(SOCKET_EVENTS.FIRE, ({id}) => {
+            socket.on(SOCKET_EVENTS.FIRE, ({id}) => {
                 gameService.registerBullet(id)
             });
 
-            this.socket.on(SOCKET_EVENTS.UPDATE_TANK, (tank: ITank) => {
+            socket.on(SOCKET_EVENTS.UPDATE_TANK, (tank: ITank) => {
                 gameService.updateTank(tank)
             });
 
-            this.socket.on(SOCKET_EVENTS.DISCONNECT, () => {
-                this.socket && gameService.removeTank(this.socket.id)
+            socket.on(SOCKET_EVENTS.DISCONNECT, () => {
+                socket && gameService.removeTank(socket.id)
             });
         }
 
     }
 
     private registerSocket(socket: Socket, io: Socket) {
-        this.socket = socket
         this.io = io
     }
 

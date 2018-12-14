@@ -45,14 +45,16 @@ class BulletsService {
         }
     }
 
-    public updateBulletStartPosition(tanksBullets: IBullets, tanks: ITanks): IBullets{
+    public updateBulletStartPosition(tanksBullets: IBullets, tanks: ITanks): IBullets {
         const updatedTanksBullets: IBullets = {}
         Object.values(tanksBullets).map((bullet: IBullet) => {
-            updatedTanksBullets[bullet.tankId] = {
-                ...bullet,
-                x: tanks[bullet.tankId].x,
-                y: tanks[bullet.tankId].y,
-                direction: tanks[bullet.tankId].direction
+            if (tanks[bullet.tankId]) {
+                updatedTanksBullets[bullet.tankId] = {
+                    ...bullet,
+                    x: tanks[bullet.tankId].x,
+                    y: tanks[bullet.tankId].y,
+                    direction: tanks[bullet.tankId].direction
+                }
             }
         })
         return updatedTanksBullets
