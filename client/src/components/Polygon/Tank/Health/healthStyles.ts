@@ -6,12 +6,12 @@ const styles = {
     height: '10px',
     zIndex: 7,
     top: '-20px',
-    left: '25px'
+    left: '2px'
   },
   health: {
     position: 'relative',
     height: '10px',
-    transition: 'all 0.5s linear',
+    transition: 'all 0.5s 0.5s linear',
   }
 } as React.CSSProperties 
 

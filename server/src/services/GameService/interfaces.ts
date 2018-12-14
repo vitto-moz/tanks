@@ -92,6 +92,7 @@ export interface IGameState {
 }
 
 export interface IGameSpeed {
+    slowest: boolean
     slow: boolean
     medium: boolean
     fast: boolean

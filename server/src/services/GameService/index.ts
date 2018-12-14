@@ -51,22 +51,28 @@ class GameService {
         // emitUpdate - is a socket io event to update polygon
         let tick = 0
         setInterval(() => {
-            this.updateDecider(tick)
+            const speed = this.getSpeed(tick)
+            this.updateDecider(speed)
             emitUpdate(this.gameState)
-            this.clean()
+            this.clean(speed)
             tick++
         }, UPDATING_INTERVAL
         )
     }
 
-    private updateDecider(tick: number) {
+    private getSpeed(tick: number): IGameSpeed {
         const medium = tick % 2 === 0
-        const slow = tick % 20 === 0
+        const slow = tick % 6 === 0
+        const slowest = tick % 20 === 0
+        return {slowest, slow, medium, fast: true}
+    }
+
+    private updateDecider(speed: IGameSpeed) {
         this.changeGameState(
-            medium ? this.tanksMovements : null,
+            speed.medium ? this.tanksMovements : null,
             this.tanksBullets,
             this.gameState.tanks,
-            {slow, medium, fast: true}
+            speed
         )
     }
 
@@ -104,10 +110,15 @@ class GameService {
         const movedTanks = tanksMovements
             ? this.getUpdatedTanks(tanksMovements, tanks) : this.gameState.tanks
 
+        if (speed.slow) {
+
+        }
         const movedBullets =
             bulletsService.getMovedBullets(
                 this.gameState.bullets,
-                newTanksBullets
+                speed.slow
+                    ? bulletsService.updateBulletStartPosition(newTanksBullets, tanks)
+                    : null
             )
 
         const objectsToIntersect = [
@@ -123,16 +134,16 @@ class GameService {
         this.gameState.tanks = tanksService.getInjuredTanks(movedTanks, collisions)
         this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, collisions)
 
-        this.gameState.collisions = speed.slow
+        this.gameState.collisions = speed.slowest
             ? collisions.filter((collisions: ICollision) => {
                 return !collisions.done
             })
             : collisions
     }
 
-    private clean() {
+    private clean(speed: IGameSpeed) {
         this.tanksMovements = {}
-        this.tanksBullets = {}
+        this.tanksBullets = speed.slow ? {} : this.tanksBullets
         Object.keys(this.gameState.tanks).map((tankId: string) => {
             return this.gameState.tanks[tankId].fire = false
         })
@@ -144,11 +155,11 @@ class GameService {
 
     public registerBullet(tankId: string) {
         if (this.gameState.tanks[tankId]) {
-            this.tanksBullets[tankId] = this.addBullet(tankId)
+            this.tanksBullets[tankId] = this.createBullet(tankId)
         }
     }
 
-    public addBullet(tankId: string): IBullet {
+    public createBullet(tankId: string): IBullet {
         return {
             id: randomId(),
             tankId,

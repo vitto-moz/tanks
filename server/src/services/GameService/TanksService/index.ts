@@ -12,7 +12,7 @@ interface ITanksMovements {
     [index: string]: Direction
 }
 
-const INJURE_QUANTUM = 5
+const INJURE_QUANTUM = 25
 
 class TanksService {
 
