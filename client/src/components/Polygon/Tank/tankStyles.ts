@@ -16,6 +16,17 @@ const styles: any = {
         height: '100px',
         zIndex: 1
     },
+    name: {
+        position: 'absolute',
+        width: '200px',
+        zIndex: 2,
+        top: '-57px',
+        color: 'white',
+        textAlign: 'center',
+        fontSize: '25px',
+        right: '-49px',
+        fontFamily: 'monospace'
+    }
 };
 
 export default styles

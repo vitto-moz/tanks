@@ -131,7 +131,7 @@ class Tank extends React.PureComponent<Props, State> {
         })
     }
 
-    public componentWillUnmount(){
+    public componentWillUnmount() {
         const {x, y} = this.props.tank
         this.props.addFinishExplosion({x, y})
     }
@@ -174,6 +174,7 @@ class Tank extends React.PureComponent<Props, State> {
                     backgroundImage: `url(${this.props.tank.skinUrl})`,
                 }}>
                 </div>
+                <span style={styles.name}>{this.props.tank.name}</span>
             </div>
         );
     }
