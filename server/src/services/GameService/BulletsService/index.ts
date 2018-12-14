@@ -1,5 +1,5 @@
 import {ITanksBullets, DIRECTIONS} from './../index';
-import {IBullet, ICollision} from '../interfaces';
+import {IBullet, ICollision, IBullets, ITanks} from '../interfaces';
 import CONSTANTS from '../../../constants';
 
 interface IBulletHitPoint {
@@ -22,16 +22,42 @@ class BulletsService {
     constructor() {
     }
 
-    public getMovedBullets(bullets: IBullet[], newTanksBullets: ITanksBullets): IBullet[] {
-        const aNewTanksBullets = Object.values(newTanksBullets)
-        const tanksBullets = [...bullets, ...aNewTanksBullets]
-            .map((bullet) => {
-                return bullet.new
-                    ? {...bullet, new: false}
-                    : {...this.moveBullet(bullet)}
-                // return this.moveBullet(bullet)
-            })
-        return tanksBullets
+    public getMovedBullets(bullets: IBullet[], newTanksBullets: ITanksBullets | null): IBullet[] {
+        if (newTanksBullets) {
+            const aNewTanksBullets = Object.values(newTanksBullets)
+            const tanksBullets = [...bullets, ...aNewTanksBullets]
+                .map((bullet) => {
+                    return bullet.new
+                        ? {...bullet, new: false}
+                        : {...this.moveBullet(bullet)}
+                    // return this.moveBullet(bullet)
+                })
+            return tanksBullets
+        } else {
+            const tanksBullets = bullets
+                .map((bullet) => {
+                    return bullet.new
+                        ? {...bullet, new: false}
+                        : {...this.moveBullet(bullet)}
+                    // return this.moveBullet(bullet)
+                })
+            return tanksBullets
+        }
+    }
+
+    public updateBulletStartPosition(tanksBullets: IBullets, tanks: ITanks): IBullets {
+        const updatedTanksBullets: IBullets = {}
+        Object.values(tanksBullets).map((bullet: IBullet) => {
+            if (tanks[bullet.tankId]) {
+                updatedTanksBullets[bullet.tankId] = {
+                    ...bullet,
+                    x: tanks[bullet.tankId].x,
+                    y: tanks[bullet.tankId].y,
+                    direction: tanks[bullet.tankId].direction
+                }
+            }
+        })
+        return updatedTanksBullets
     }
 
 

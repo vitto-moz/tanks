@@ -4,7 +4,7 @@ const SOCKET_EVENTS = {
     REGISTER_USER: 'REGISTER_USER', 
     MOVE: 'MOVE', 
     FIRE: 'FIRE', 
-    DISCONNECT: 'DISCONNECT', 
+    DISCONNECT: 'disconnect', 
 }
 
 export default SOCKET_EVENTS

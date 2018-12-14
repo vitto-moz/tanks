@@ -18,6 +18,7 @@ export interface ITank {
     fire: boolean
     skinUrl: string
     teamId: TeamId
+    dead: boolean
 }
 
 export interface ITanks {
@@ -92,6 +93,7 @@ export interface IGameState {
 }
 
 export interface IGameSpeed {
+    slowest: boolean
     slow: boolean
     medium: boolean
     fast: boolean

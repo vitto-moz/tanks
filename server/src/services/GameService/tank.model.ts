@@ -16,6 +16,7 @@ export class Tank implements ITank {
     public bullets: IBullet[]
     public skinUrl: string
     public teamId: TeamId
+    public dead: boolean = false
 
     constructor(
         name: string,
@@ -43,7 +44,6 @@ export class Tank implements ITank {
         startPointType: string,
         tanks: ITanks
     ): IStartPoint {
-        console.log('startPoints ', startPoints)
         const aTanks = Object.values(tanks)
         return startPoints.filter((startPoint: IStartPoint) => {
             return startPoint.type === startPointType && this.isStartPointFree(startPoint, aTanks)
