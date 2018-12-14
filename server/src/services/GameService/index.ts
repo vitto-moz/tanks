@@ -82,6 +82,10 @@ class GameService {
         return id
     }
 
+    public removeTank(id: string){
+        delete this.gameState.tanks[id]
+    }
+
     public updateTank(tank: ITank) {
         this.gameState.tanks[tank.id] = tank
     }

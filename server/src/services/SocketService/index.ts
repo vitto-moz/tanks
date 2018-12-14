@@ -51,7 +51,7 @@ class SocketService {
             });
 
             this.socket.on(SOCKET_EVENTS.DISCONNECT, () => {
-                console.log('Client disconnected');
+                this.socket && gameService.removeTank(this.socket.id)
             });
         }
 

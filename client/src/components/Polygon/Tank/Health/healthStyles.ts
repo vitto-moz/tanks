@@ -11,7 +11,7 @@ const styles = {
   health: {
     position: 'relative',
     height: '10px',
-    transition: 'all 0.5s 0.5s linear',
+    transition: 'all 0.5s 0.3s linear',
   }
 } as React.CSSProperties 
 
