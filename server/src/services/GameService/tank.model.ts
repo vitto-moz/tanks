@@ -21,6 +21,7 @@ export class Tank implements ITank {
         name: string,
         id: string,
         teamId: TeamId,
+        skinUrl: string,
         startPoints: IStartPoint[],
         tanks: ITanks
     ) {
@@ -33,7 +34,7 @@ export class Tank implements ITank {
         this.y = y
         this.direction = teamId === 'GREEN' ? 'DOWN' : 'UP'
         this.fire = false
-        this.skinUrl = 'https://opengameart.org/sites/default/files/preview_344.png'
+        this.skinUrl = skinUrl ? skinUrl : 'https://opengameart.org/sites/default/files/preview_344.png'
         this.bullets = []
     }
 

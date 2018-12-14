@@ -70,9 +70,9 @@ class GameService {
         )
     }
 
-    public addTank(name: string, id: string, teamId: TeamId): string {
+    public addTank(name: string, id: string, teamId: TeamId, skinUrl: string): string {
         this.gameState.tanks[id] =
-            new Tank(name, id, teamId, this.startPoints, this.gameState.tanks)
+            new Tank(name, id, teamId, skinUrl, this.startPoints, this.gameState.tanks)
         return id
     }
 

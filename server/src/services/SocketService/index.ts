@@ -25,10 +25,15 @@ class SocketService {
 
     private bindSocketEvents() {
         if (this.socket) {
-            this.socket.on(SOCKET_EVENTS.REGISTER_USER, (name: string, teamId: TeamId, fn) => {
+            this.socket.on(SOCKET_EVENTS.REGISTER_USER, (
+                name: string,
+                teamId: TeamId,
+                skinUrl: string,
+                fn
+            ) => {
                 this.socket
                 if (this.socket) {
-                    gameService.addTank(name, this.socket.id, teamId)
+                    gameService.addTank(name, this.socket.id, teamId, skinUrl)
                     fn(this.socket.id)
                 }
             });
