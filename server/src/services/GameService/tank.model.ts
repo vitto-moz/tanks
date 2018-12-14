@@ -16,6 +16,7 @@ export class Tank implements ITank {
     public bullets: IBullet[]
     public skinUrl: string
     public teamId: TeamId
+    public dead: boolean = false
 
     constructor(
         name: string,

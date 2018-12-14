@@ -18,6 +18,7 @@ export interface ITank {
     fire: boolean
     skinUrl: string
     teamId: TeamId
+    dead: boolean
 }
 
 export interface ITanks {

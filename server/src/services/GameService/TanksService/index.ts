@@ -54,11 +54,16 @@ class TanksService {
 
     public getInjuredTanks(tanks: ITanks, collisions: ICollision[]): ITanks {
         const injuredTanks = {...tanks}
+        Object.keys(injuredTanks).map((tankId: string) => {
+            if (injuredTanks[tankId].dead) {
+                delete injuredTanks[tankId]
+            }
+        })
         collisions.map((collision: ICollision) => {
             if (!collision.done && injuredTanks[collision.objectId]) {
                 injuredTanks[collision.objectId].hp = injuredTanks[collision.objectId].hp - INJURE_QUANTUM
                 if (injuredTanks[collision.objectId].hp <= 0) {
-                    delete injuredTanks[collision.objectId]
+                    injuredTanks[collision.objectId].dead = true
                 }
             }
         })

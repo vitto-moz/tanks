@@ -6,7 +6,7 @@ const styles = {
     height: '10px',
     zIndex: 7,
     top: '-20px',
-    left: '2px'
+    left: '27px'
   },
   health: {
     position: 'relative',
