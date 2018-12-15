@@ -69,7 +69,10 @@ class TanksService {
                         return bullet.id === collision.bulletId
                     })[0]
 
-                    injuredTanks[killerBullet.tankId].score++
+                    if (injuredTanks[collision.objectId].teamId !== injuredTanks[killerBullet.tankId].teamId) {
+                        injuredTanks[killerBullet.tankId].score++
+                    }
+
                 }
             }
         })
