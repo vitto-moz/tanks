@@ -3,6 +3,7 @@ import styles from './tankStyles'
 import {IBullet, ITank, Direction, ICoordinate} from '../../../services/socketService/interfaces';
 import {coordsToPixels} from '../../../utils/helpers';
 import Health from './Health';
+import Star from './Star';
 
 export type direction = 'LEFT' | 'RIGHT' | 'UP' | 'DOWN' | 'SPACE'
 
@@ -147,6 +148,14 @@ class Tank extends React.PureComponent<Props, State> {
         })
     }
 
+    private getStars() {
+        const stars = []
+        for (let i = 0;i < this.props.tank.score;i++) {
+            stars.push(<Star key={i} />)
+        }
+        return stars
+    }
+
     private getTankPositionStyles() {
         return {
             transform: `translateX(${coordsToPixels(this.props.tank.x)}px) translateY(${coordsToPixels(this.props.tank.y)}px)`
@@ -160,6 +169,7 @@ class Tank extends React.PureComponent<Props, State> {
                 ...this.getTankPositionStyles(),
                 ...styles.tankWrap
             }}>
+                
                 <Health
                     hp={this.props.tank.hp}
                     teamId={this.props.tank.teamId}
@@ -175,6 +185,10 @@ class Tank extends React.PureComponent<Props, State> {
                 }}>
                 </div>
                 <span style={styles.name}>{this.props.tank.name}</span>
+
+                <div style={styles.starsWrap}>
+                    {this.getStars()}
+                </div>
             </div>
         );
     }

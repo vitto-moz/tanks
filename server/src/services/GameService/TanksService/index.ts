@@ -1,4 +1,4 @@
-import {ITanks, Direction, Directions, ITank, ICollision} from '../interfaces';
+import {ITanks, Direction, Directions, ITank, ICollision, IBullet} from '../interfaces';
 import CONSTANTS from '../../../constants';
 
 export const DIRECTIONS: Directions = {
@@ -52,7 +52,7 @@ class TanksService {
         return possibleTank
     }
 
-    public getInjuredTanks(tanks: ITanks, collisions: ICollision[]): ITanks {
+    public getInjuredTanks(tanks: ITanks, collisions: ICollision[], bullets: IBullet[]): ITanks {
         const injuredTanks = {...tanks}
         Object.keys(injuredTanks).map((tankId: string) => {
             if (injuredTanks[tankId].dead) {
@@ -64,6 +64,12 @@ class TanksService {
                 injuredTanks[collision.objectId].hp = injuredTanks[collision.objectId].hp - INJURE_QUANTUM
                 if (injuredTanks[collision.objectId].hp <= 0) {
                     injuredTanks[collision.objectId].dead = true
+
+                    const killerBullet = bullets.filter((bullet: IBullet) => {
+                        return bullet.id === collision.bulletId
+                    })[0]
+
+                    injuredTanks[killerBullet.tankId].score++
                 }
             }
         })

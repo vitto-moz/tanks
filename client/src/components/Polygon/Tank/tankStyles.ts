@@ -26,7 +26,18 @@ const styles: any = {
         fontSize: '25px',
         right: '-49px',
         fontFamily: 'monospace'
-    }
+    },
+    starsWrap: {
+        position: 'absolute',
+        width: '200px',
+        height: '20px',
+        zIndex: 7,
+        top: '-79px',
+        left: '-50px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      },
 };
 
 export default styles

@@ -133,7 +133,7 @@ class BulletsService {
         }
     }
 
-    public ridOfExploidedBullets(bullets: IBullet[], collisions: ICollision[]) {
+    public ridOfExploidedBullets(bullets: IBullet[], collisions: ICollision[]): IBullet[] {
         const existingBullets = bullets.filter((bullet: IBullet): boolean => {
             return this.bulletsToDelete
                 .map((bulletToDelete: IBullet): boolean => {

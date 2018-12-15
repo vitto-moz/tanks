@@ -17,6 +17,7 @@ export class Tank implements ITank {
     public skinUrl: string
     public teamId: TeamId
     public dead: boolean = false
+    public score: number = 0
 
     constructor(
         name: string,

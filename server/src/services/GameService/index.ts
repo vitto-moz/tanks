@@ -135,7 +135,7 @@ class GameService {
             ...bulletsService.getBulletsCollisions(objectsToIntersect, movedBullets)
         ]
 
-        this.gameState.tanks = tanksService.getInjuredTanks(movedTanks, collisions)
+        this.gameState.tanks = tanksService.getInjuredTanks(movedTanks, collisions, movedBullets)
         this.gameState.bullets = bulletsService.ridOfExploidedBullets(movedBullets, collisions)
 
         this.gameState.collisions = speed.slowest

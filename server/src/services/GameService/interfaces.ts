@@ -19,6 +19,7 @@ export interface ITank {
     skinUrl: string
     teamId: TeamId
     dead: boolean
+    score: number
 }
 
 export interface ITanks {

@@ -18,6 +18,7 @@ export interface ITank {
     fire: boolean
     skinUrl: string
     teamId: TeamId
+    score: number
 }
 
 export interface ITanks {
