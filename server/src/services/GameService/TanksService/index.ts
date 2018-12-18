@@ -65,14 +65,13 @@ class TanksService {
                 if (injuredTanks[collision.objectId].hp <= 0) {
                     injuredTanks[collision.objectId].dead = true
 
-                    const killerBullet = bullets.filter((bullet: IBullet) => {
-                        return bullet.id === collision.bulletId
-                    })[0]
+                    const killerBullet = bullets.find((bullet: IBullet) => bullet.id === collision.bulletId);
 
-                    if (injuredTanks[collision.objectId].teamId !== injuredTanks[killerBullet.tankId].teamId) {
-                        injuredTanks[killerBullet.tankId].score++
+                    if (injuredTanks[killerBullet.tankId]) {
+                        if (injuredTanks[collision.objectId].teamId !== injuredTanks[killerBullet.tankId].teamId) {
+                            injuredTanks[killerBullet.tankId].score++
+                        }
                     }
-
                 }
             }
         })
